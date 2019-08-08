@@ -1,0 +1,17 @@
+{
+    "name": "maurobonfietti/skel-api-slim-php-crud-generator",
+    "description": "CRUD Generator For Rest-Api-Slim-PHP Skeleton...",
+    "authors": [
+        {
+            "name": "Mauro Bonfietti",
+            "email": "mauro.bonfietti@gmail.com",
+            "homepage": "https://github.com/maurobonfietti"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "HelloWorld": "src/"
+        }
+    },
+    "require": {}
+}
