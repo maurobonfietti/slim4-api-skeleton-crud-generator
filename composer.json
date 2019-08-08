@@ -9,8 +9,9 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "HelloWorld": "src/"
+        "psr-4": {
+            "App\\": "src/",
+            "Tests\\": "tests/"
         }
     },
     "type": "package",
