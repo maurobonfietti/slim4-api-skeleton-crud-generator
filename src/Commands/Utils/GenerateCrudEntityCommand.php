@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateCrudEntityCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.0.1';
+    const COMMAND_VERSION = '0.0.0.2';
 
     public function __construct($app)
     {
@@ -44,6 +44,7 @@ class GenerateCrudEntityCommand extends Command
         $statement = $db->prepare($query);
         $statement->execute();
         $fields = $statement->fetchAll();
+//        var_dump($fields); exit;
 
         // Get Insert and Update Functions, using each fields of the entity.
         $repositoryFunctions = $this->getRepositoryFunctions($fields, $entityName, $entityNameUpper);
@@ -61,7 +62,7 @@ class GenerateCrudEntityCommand extends Command
 
         // Copy CRUD Template.
         $source = __DIR__ . '/../../Commands/SourceCode/Objectbase';
-        $target = __DIR__ . '/../../Controller/' . ucfirst($entityName);
+        $target = __DIR__ . '/../../../../../../src/Controller/' . ucfirst($entityName);
         shell_exec("cp -r $source $target");
 
         // Replace CRUD Controller Template for New Entity.
@@ -84,7 +85,7 @@ class GenerateCrudEntityCommand extends Command
 
         // Replace and Update Exceptions
         $source = __DIR__ . '/../../Commands/SourceCode/ObjectbaseException.php';
-        $target = __DIR__ . '/../../Exception/' . ucfirst($entityName). 'Exception.php';
+        $target = __DIR__ . '/../../../../../../src/Exception/' . ucfirst($entityName). 'Exception.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
@@ -92,7 +93,7 @@ class GenerateCrudEntityCommand extends Command
 
         // Replace and Update Services.
         $source = __DIR__ . '/../../Commands/SourceCode/ObjectbaseService.php';
-        $target = __DIR__ . '/../../Service/' . ucfirst($entityName). 'Service.php';
+        $target = __DIR__ . '/../../../../../../src/Service/' . ucfirst($entityName). 'Service.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
@@ -100,7 +101,7 @@ class GenerateCrudEntityCommand extends Command
 
         // Replace and Update Repository.
         $source = __DIR__ . '/../../Commands/SourceCode/ObjectbaseRepository.php';
-        $target = __DIR__ . '/../../Repository/' . ucfirst($entityName). 'Repository.php';
+        $target = __DIR__ . '/../../../../../../src/Repository/' . ucfirst($entityName). 'Repository.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
@@ -176,7 +177,8 @@ $app->group("/'.$entityName.'", function () use ($app) {
     $app->delete("/[{id}]", "App\Controller\\'.ucfirst($entityName).'\Delete");
 });
 ';
-        $file = __DIR__ . '/../../App/Routes.php';
+        $file = __DIR__ . '/../../../../../../src/App/Routes.php';
+//        var_dump($file); exit;
         $content = file_get_contents($file);
         $content.= $routes;
         file_put_contents($file, $content);
@@ -189,7 +191,7 @@ $container["'.$entityName.'_repository"] = function (ContainerInterface $contain
     return new App\Repository\\'.ucfirst($entityName).'Repository($container->get("db"));
 };
 ';
-        $file = __DIR__ . '/../../App/Repositories.php';
+        $file = __DIR__ . '/../../../../../../src/App/Repositories.php';
         $repositoryContent = file_get_contents($file);
         $repositoryContent.= $repository;
         file_put_contents($file, $repositoryContent);
@@ -202,7 +204,7 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
     return new App\Service\\'.ucfirst($entityName).'Service($container->get("'.$entityName.'_repository"));
 };
 ';
-        $file = __DIR__ . '/../../App/Services.php';
+        $file = __DIR__ . '/../../../../../../src/App/Services.php';
         $serviceContent = file_get_contents($file);
         $serviceContent.= $service;
         file_put_contents($file, $serviceContent);
