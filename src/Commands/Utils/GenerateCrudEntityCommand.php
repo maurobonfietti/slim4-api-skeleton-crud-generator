@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateCrudEntityCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.0.2';
+    const COMMAND_VERSION = '0.0.3';
 
     public function __construct($app)
     {
