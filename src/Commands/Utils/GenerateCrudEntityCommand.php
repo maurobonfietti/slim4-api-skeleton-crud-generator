@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateCrudEntityCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.4';
+    const COMMAND_VERSION = '0.0.4.local';
 
     public function __construct($app)
     {
@@ -156,18 +156,18 @@ class GenerateCrudEntityCommand extends Command
                 $paramList5.= sprintf("%'\t1s", '');
 //                var_dump($field);
 //                exit;
-                if ($field['Null'] == "NO" && $field['Type'] == "varchar(100)") {
+                if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
                     $paramList6.= sprintf("'%s' => '%s',%s", $field['Field'], '', PHP_EOL);
                     $paramList6.= sprintf("%'\t2s", '');   
                 }
-                if ($field['Null'] == "NO" && $field['Type'] == "int(11)") {
+                if ($field['Null'] == "NO" && strpos($field['Type'], 'int') !== false) {
                     $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
                     $paramList6.= sprintf("%'\t2s", '');   
                 }
-                if ($field['Null'] == "NO" && $field['Type'] == "tinyint(1)") {
-                    $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-                    $paramList6.= sprintf("%'\t2s", '');   
-                }
+//                if ($field['Null'] == "NO" && $field['Type'] == "tinyint(1)") {
+//                    $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
+//                    $paramList6.= sprintf("%'\t2s", '');   
+//                }
             }
         }
         $fieldList = substr_replace($paramList, '', -2);
@@ -176,7 +176,6 @@ class GenerateCrudEntityCommand extends Command
         $fieldList4 = substr_replace($paramList4, '', -2);
         $fieldList5 = substr_replace($paramList5, '', -2);
         $fieldList6 = substr_replace($paramList6, '', -3);
-
 //        var_dump($fieldList6); exit;
 
         // Get Base Query For Insert Function.
