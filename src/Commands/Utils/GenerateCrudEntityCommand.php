@@ -50,7 +50,6 @@ class GenerateCrudEntityCommand extends Command
         $repositoryFunctions = $this->getRepositoryFunctions($fields, $entityName, $entityNameUpper);
         $insertQueryFunction = $repositoryFunctions[0];
         $updateQueryFunction = $repositoryFunctions[1];
-//        var_dump($repositoryFunctions[2]); exit;
 
         // Add and Update Routes.
         $this->updateRoutes($entityName);
@@ -118,7 +117,6 @@ class GenerateCrudEntityCommand extends Command
         $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $updateQueryFunction, $entityRepositoryUpdate);
         file_put_contents($target, $repositoryDataUpdate);
 
-
         // Create Integration Tests for new endpoints...
         $source = __DIR__ . '/../../Commands/SourceCode/ObjectbaseTest.php';
         $target = __DIR__ . '/../../../../../../tests/integration/' . ucfirst($entityName). 'Test.php';
@@ -131,7 +129,6 @@ class GenerateCrudEntityCommand extends Command
         $entityTests = file_get_contents($target);
         $testsData = preg_replace("/".'#postParams'."/", $repositoryFunctions[2], $entityTests);
         file_put_contents($target, $testsData);
-
 
         $output->writeln('Script Finish ;-)');
     }
@@ -154,20 +151,14 @@ class GenerateCrudEntityCommand extends Command
                 $paramList4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
                 $paramList5.= sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $entityName, $field['Field'], $field['Field'], PHP_EOL);
                 $paramList5.= sprintf("%'\t1s", '');
-//                var_dump($field);
-//                exit;
                 if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
-                    $paramList6.= sprintf("'%s' => '%s',%s", $field['Field'], '', PHP_EOL);
-                    $paramList6.= sprintf("%'\t2s", '');   
+                    $paramList6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
+                    $paramList6.= sprintf("%'\t2s", '');
                 }
                 if ($field['Null'] == "NO" && strpos($field['Type'], 'int') !== false) {
                     $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-                    $paramList6.= sprintf("%'\t2s", '');   
+                    $paramList6.= sprintf("%'\t2s", '');
                 }
-//                if ($field['Null'] == "NO" && $field['Type'] == "tinyint(1)") {
-//                    $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-//                    $paramList6.= sprintf("%'\t2s", '');   
-//                }
             }
         }
         $fieldList = substr_replace($paramList, '', -2);
@@ -176,7 +167,6 @@ class GenerateCrudEntityCommand extends Command
         $fieldList4 = substr_replace($paramList4, '', -2);
         $fieldList5 = substr_replace($paramList5, '', -2);
         $fieldList6 = substr_replace($paramList6, '', -3);
-//        var_dump($fieldList6); exit;
 
         // Get Base Query For Insert Function.
         $insertQueryFunction = '$query = \'INSERT INTO `'.$entityName.'` ('.$fieldList.') VALUES ('.$fieldList2.')\';
@@ -211,7 +201,6 @@ $app->group("/'.$entityName.'", function () use ($app) {
 });
 ';
         $file = __DIR__ . '/../../../../../../src/App/Routes.php';
-//        var_dump($file); exit;
         $content = file_get_contents($file);
         $content.= $routes;
         file_put_contents($file, $content);

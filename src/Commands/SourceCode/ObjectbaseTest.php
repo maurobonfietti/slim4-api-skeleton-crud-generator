@@ -12,6 +12,7 @@ class ObjectbaseTest extends BaseTestCase
             'POST',
             '/objectbase',
             [
+                '' => '',
                 #postParams
             ]
         );
