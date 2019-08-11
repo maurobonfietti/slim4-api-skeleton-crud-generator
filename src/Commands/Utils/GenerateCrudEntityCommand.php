@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class GenerateCrudEntityCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.3';
+    const COMMAND_VERSION = '0.0.4';
 
     public function __construct($app)
     {
@@ -50,6 +50,7 @@ class GenerateCrudEntityCommand extends Command
         $repositoryFunctions = $this->getRepositoryFunctions($fields, $entityName, $entityNameUpper);
         $insertQueryFunction = $repositoryFunctions[0];
         $updateQueryFunction = $repositoryFunctions[1];
+//        var_dump($repositoryFunctions[2]); exit;
 
         // Add and Update Routes.
         $this->updateRoutes($entityName);
@@ -117,6 +118,21 @@ class GenerateCrudEntityCommand extends Command
         $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $updateQueryFunction, $entityRepositoryUpdate);
         file_put_contents($target, $repositoryDataUpdate);
 
+
+        // Create Integration Tests for new endpoints...
+        $source = __DIR__ . '/../../Commands/SourceCode/ObjectbaseTest.php';
+        $target = __DIR__ . '/../../../../../../tests/integration/' . ucfirst($entityName). 'Test.php';
+        shell_exec("cp $source $target");
+        shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
+        shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
+        shell_exec("rm -f $target.bkp");
+
+        // Create Integration Tests for new endpoints...
+        $entityTests = file_get_contents($target);
+        $testsData = preg_replace("/".'#postParams'."/", $repositoryFunctions[2], $entityTests);
+        file_put_contents($target, $testsData);
+
+
         $output->writeln('Script Finish ;-)');
     }
 
@@ -128,6 +144,7 @@ class GenerateCrudEntityCommand extends Command
         $paramList3 = '';
         $paramList4 = '';
         $paramList5 = '';
+        $paramList6 = '';
         foreach ($fields as $field) {
             $paramList.= sprintf("`%s`, ", $field['Field']);
             $paramList2.= sprintf(":%s, ", $field['Field']);
@@ -137,6 +154,20 @@ class GenerateCrudEntityCommand extends Command
                 $paramList4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
                 $paramList5.= sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $entityName, $field['Field'], $field['Field'], PHP_EOL);
                 $paramList5.= sprintf("%'\t1s", '');
+//                var_dump($field);
+//                exit;
+                if ($field['Null'] == "NO" && $field['Type'] == "varchar(100)") {
+                    $paramList6.= sprintf("'%s' => '%s',%s", $field['Field'], '', PHP_EOL);
+                    $paramList6.= sprintf("%'\t2s", '');   
+                }
+                if ($field['Null'] == "NO" && $field['Type'] == "int(11)") {
+                    $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
+                    $paramList6.= sprintf("%'\t2s", '');   
+                }
+                if ($field['Null'] == "NO" && $field['Type'] == "tinyint(1)") {
+                    $paramList6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
+                    $paramList6.= sprintf("%'\t2s", '');   
+                }
             }
         }
         $fieldList = substr_replace($paramList, '', -2);
@@ -144,6 +175,9 @@ class GenerateCrudEntityCommand extends Command
         $fieldList3 = substr_replace($paramList3, '', -2);
         $fieldList4 = substr_replace($paramList4, '', -2);
         $fieldList5 = substr_replace($paramList5, '', -2);
+        $fieldList6 = substr_replace($paramList6, '', -3);
+
+//        var_dump($fieldList6); exit;
 
         // Get Base Query For Insert Function.
         $insertQueryFunction = '$query = \'INSERT INTO `'.$entityName.'` ('.$fieldList.') VALUES ('.$fieldList2.')\';
@@ -163,7 +197,7 @@ class GenerateCrudEntityCommand extends Command
 
         return $this->checkAndGet'.$entityNameUpper.'((int) $'.$entityName.'->id);';
 
-        return [$insertQueryFunction, $updateQueryFunction];
+        return [$insertQueryFunction, $updateQueryFunction, $fieldList6];
     }
 
     private function updateRoutes($entityName)
