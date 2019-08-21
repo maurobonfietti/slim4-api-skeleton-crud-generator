@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Commands\Utils;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
-class GenerateCrudEntityCommand extends Command
+class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.6';
+    const COMMAND_VERSION = '0.0.7';
 
     public function __construct($app)
     {
@@ -72,7 +72,7 @@ class GenerateCrudEntityCommand extends Command
         $this->updateRepository2($entityName, $entityNameUpper);
 
         // Replace and Update Repository with Insert and Update Query Functions.
-        $this->updateRepository3($entityName, $entityNameUpper, $insertQueryFunction, $updateQueryFunction);
+        $this->updateRepository3($entityNameUpper, $insertQueryFunction, $updateQueryFunction);
 
         // Create Integration Tests for new endpoints.
         $this->generateIntegrationTests($entityName, $entityNameUpper, $repositoryFunctions[2]);
@@ -147,7 +147,7 @@ $app->group("/'.$entityName.'", function () use ($app) {
     $app->delete("/[{id}]", "App\Controller\\'.$entityNameUpper.'\Delete");
 });
 ';
-        $file = __DIR__ . '/../../../../../../src/App/Routes.php';
+        $file = __DIR__ . '/../../../../../src/App/Routes.php';
         $content = file_get_contents($file);
         $content.= $routes;
         file_put_contents($file, $content);
@@ -160,7 +160,7 @@ $container["'.$entityName.'_repository"] = function (ContainerInterface $contain
     return new App\Repository\\'.$entityNameUpper.'Repository($container->get("db"));
 };
 ';
-        $file = __DIR__ . '/../../../../../../src/App/Repositories.php';
+        $file = __DIR__ . '/../../../../../src/App/Repositories.php';
         $repositoryContent = file_get_contents($file);
         $repositoryContent.= $repository;
         file_put_contents($file, $repositoryContent);
@@ -173,7 +173,7 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
     return new App\Service\\'.$entityNameUpper.'Service($container->get("'.$entityName.'_repository"));
 };
 ';
-        $file = __DIR__ . '/../../../../../../src/App/Services.php';
+        $file = __DIR__ . '/../../../../../src/App/Services.php';
         $serviceContent = file_get_contents($file);
         $serviceContent.= $service;
         file_put_contents($file, $serviceContent);
@@ -182,8 +182,8 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
     private function generateControllerFiles($entityName, $entityNameUpper)
     {
         // Copy CRUD Template.
-        $source = __DIR__ . '/../../Commands/TemplateBase/Objectbase';
-        $target = __DIR__ . '/../../../../../../src/Controller/' . $entityNameUpper;
+        $source = __DIR__ . '/../Command/TemplateBase/Objectbase';
+        $target = __DIR__ . '/../../../../../src/Controller/' . $entityNameUpper;
         shell_exec("cp -r $source $target");
 
         // Replace CRUD Controller Template for New Entity.
@@ -207,8 +207,8 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
 
     private function updateExceptions($entityName, $entityNameUpper)
     {
-        $source = __DIR__ . '/../../Commands/TemplateBase/ObjectbaseException.php';
-        $target = __DIR__ . '/../../../../../../src/Exception/' . $entityNameUpper . 'Exception.php';
+        $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
+        $target = __DIR__ . '/../../../../../src/Exception/' . $entityNameUpper . 'Exception.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
@@ -217,8 +217,8 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
 
     private function updateServices2($entityName, $entityNameUpper)
     {
-        $source = __DIR__ . '/../../Commands/TemplateBase/ObjectbaseService.php';
-        $target = __DIR__ . '/../../../../../../src/Service/' . $entityNameUpper . 'Service.php';
+        $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseService.php';
+        $target = __DIR__ . '/../../../../../src/Service/' . $entityNameUpper . 'Service.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
@@ -227,17 +227,17 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
 
     private function updateRepository2($entityName, $entityNameUpper)
     {
-        $source = __DIR__ . '/../../Commands/TemplateBase/ObjectbaseRepository.php';
-        $target = __DIR__ . '/../../../../../../src/Repository/' . $entityNameUpper . 'Repository.php';
+        $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseRepository.php';
+        $target = __DIR__ . '/../../../../../src/Repository/' . $entityNameUpper . 'Repository.php';
         shell_exec("cp $source $target");
         shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
         shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
         shell_exec("rm -f $target.bkp");
     }
 
-    private function updateRepository3($entityName, $entityNameUpper, $insertQueryFunction, $updateQueryFunction)
+    private function updateRepository3($entityNameUpper, $insertQueryFunction, $updateQueryFunction)
     {
-        $target = __DIR__ . '/../../../../../../src/Repository/' . $entityNameUpper . 'Repository.php';
+        $target = __DIR__ . '/../../../../../src/Repository/' . $entityNameUpper . 'Repository.php';
 
         $entityRepository = file_get_contents($target);
         $repositoryData = preg_replace("/".'#createFunction'."/", $insertQueryFunction, $entityRepository);
@@ -250,16 +250,13 @@ $container["'.$entityName.'_service"] = function (ContainerInterface $container)
 
     private function generateIntegrationTests($entityName, $entityNameUpper, $postParams)
     {
-        $source = __DIR__ . '/../../Commands/TemplateBase/ObjectbaseTest.php';
-        $target = __DIR__ . '/../../../../../../tests/integration/' . $entityNameUpper . 'Test.php';
-
+        $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseTest.php';
+        $target = __DIR__ . '/../../../../../tests/integration/' . $entityNameUpper . 'Test.php';
         shell_exec("cp $source $target");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$entityNameUpper/g' $target");
-        shell_exec("sed -i .bkp -e 's/objectbase/$entityName/g' $target");
-        shell_exec("rm -f $target.bkp");
-
         $entityTests = file_get_contents($target);
-        $testsData = preg_replace("/".'#postParams'."/", $postParams, $entityTests);
-        file_put_contents($target, $testsData);
+        $testsData1 = preg_replace("/".'Objectbase'."/", $entityNameUpper, $entityTests);
+        $testsData2 = preg_replace("/".'objectbase'."/", $entityName, $testsData1);
+        $testsData3 = preg_replace("/".'#postParams'."/", $postParams, $testsData2);
+        file_put_contents($target, $testsData3);
     }
 }
