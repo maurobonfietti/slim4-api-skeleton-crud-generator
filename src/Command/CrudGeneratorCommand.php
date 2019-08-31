@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.7';
+    const COMMAND_VERSION = '0.0.8';
 
     public function __construct($app)
     {
@@ -32,11 +32,15 @@ class CrudGeneratorCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Starting!');
-
-        // Get Entity Name.
         $entityName = $input->getArgument('entity');
-        $entityNameUpper = ucfirst($entityName);
         $output->writeln('Generate Endpoints For New Entity: ' . $entityName);
+        $this->generateCrud($entityName);
+        $output->writeln('Script Finish ;-)');
+    }
+
+    protected function generateCrud($entityName)
+    {
+        $entityNameUpper = ucfirst($entityName);
 
         // Get Entity Fields.
         $db = $this->container->get('db');
@@ -76,8 +80,6 @@ class CrudGeneratorCommand extends Command
 
         // Create Integration Tests for new endpoints.
         $this->generateIntegrationTests($entityName, $entityNameUpper, $repositoryFunctions[2]);
-
-        $output->writeln('Script Finish ;-)');
     }
 
     private function getRepositoryFunctions($fields, $entityName, $entityNameUpper)
