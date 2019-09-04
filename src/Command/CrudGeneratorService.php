@@ -12,45 +12,29 @@ class CrudGeneratorService extends Command
 
     public function generateCrud($db, $entity)
     {
-        // Get Entity Name.
         $this->entity = $entity;
         $this->entityUpper = ucfirst($this->entity);
+        $fields = $this->getEntityFields($db);
+        $repositoryFunctions = $this->getRepositoryFunctions($fields);
 
-        // Get Entity Fields.
+        $this->updateRoutes();
+        $this->updateRepository();
+        $this->updateServices();
+        $this->generateControllerFiles();
+        $this->updateExceptions();
+        $this->updateServices2();
+        $this->updateRepository2();
+        $this->updateRepository3($repositoryFunctions[0], $repositoryFunctions[1]);
+        $this->generateIntegrationTests($repositoryFunctions[2]);
+    }
+
+    private function getEntityFields($db)
+    {
         $query = "DESC `$this->entity`";
         $statement = $db->prepare($query);
         $statement->execute();
-        $fields = $statement->fetchAll();
 
-        // Get Insert and Update Functions, using each fields of the entity.
-        $repositoryFunctions = $this->getRepositoryFunctions($fields);
-
-        // Add and Update Routes.
-        $this->updateRoutes();
-
-        // Add and Update Repository.
-        $this->updateRepository();
-
-        // Add and Update Services.
-        $this->updateServices();
-
-        // Generate Controller Files.
-        $this->generateControllerFiles();
-
-        // Replace and Update Exceptions.
-        $this->updateExceptions();
-
-        // Replace and Update Services.
-        $this->updateServices2();
-
-        // Replace and Update Repository.
-        $this->updateRepository2();
-
-        // Replace and Update Repository with Insert and Update Query Functions.
-        $this->updateRepository3($repositoryFunctions[0], $repositoryFunctions[1]);
-
-        // Create Integration Tests for new endpoints.
-        $this->generateIntegrationTests($repositoryFunctions[2]);
+        return $statement->fetchAll();
     }
 
     private function getRepositoryFunctions($fields)
@@ -70,7 +54,7 @@ class CrudGeneratorService extends Command
             if ($field['Field'] != 'id') {
                 $paramList4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
                 $paramList5.= sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $this->entity, $field['Field'], $field['Field'], PHP_EOL);
-                $paramList5.= sprintf("%'\t1s", '');
+                $paramList5.= sprintf("        %s", '');
                 if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
                     $paramList6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
                     $paramList6.= sprintf("%'\t2s", '');
@@ -85,7 +69,7 @@ class CrudGeneratorService extends Command
         $fieldList2 = substr_replace($paramList2, '', -2);
         $fieldList3 = substr_replace($paramList3, '', -2);
         $fieldList4 = substr_replace($paramList4, '', -2);
-        $fieldList5 = substr_replace($paramList5, '', -2);
+        $fieldList5 = substr_replace($paramList5, '', -9);
         $fieldList6 = substr_replace($paramList6, '', -3);
 
         // Get Base Query For Insert Function.
