@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.0.11';
+    const COMMAND_VERSION = '0.0.12';
 
     public function __construct($app)
     {
