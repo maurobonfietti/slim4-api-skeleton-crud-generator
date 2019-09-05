@@ -183,9 +183,10 @@ $container["'.$this->entity.'_service"] = function (ContainerInterface $containe
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
         $target = __DIR__ . '/../../../../../src/Exception/' . $this->entityUpper . 'Exception.php';
         shell_exec("cp $source $target");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target");
-        shell_exec("rm -f $target.bkp");
+        $content = file_get_contents($target);
+        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
+        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
+        file_put_contents($target, $content3);
     }
 
     private function updateServices2()
@@ -193,9 +194,10 @@ $container["'.$this->entity.'_service"] = function (ContainerInterface $containe
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseService.php';
         $target = __DIR__ . '/../../../../../src/Service/' . $this->entityUpper . 'Service.php';
         shell_exec("cp $source $target");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target");
-        shell_exec("rm -f $target.bkp");
+        $content = file_get_contents($target);
+        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
+        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
+        file_put_contents($target, $content3);
     }
 
     private function updateRepository2()
@@ -203,9 +205,10 @@ $container["'.$this->entity.'_service"] = function (ContainerInterface $containe
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseRepository.php';
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
         shell_exec("cp $source $target");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target");
-        shell_exec("rm -f $target.bkp");
+        $content = file_get_contents($target);
+        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
+        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
+        file_put_contents($target, $content3);
     }
 
     private function updateRepository3()
