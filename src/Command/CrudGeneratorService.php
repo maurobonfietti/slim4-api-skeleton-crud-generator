@@ -10,12 +10,32 @@ class CrudGeneratorService extends Command
 
     private $entityUpper;
 
+    private $fields;
+
+    private $list1;
+
+    private $list2;
+
+    private $list3;
+
+    private $list4;
+
+    private $list5;
+
+    private $list6;
+
+    private $insertQueryFunction;
+
+    private $updateQueryFunction;
+
+    private $postParams;
+
     public function generateCrud($db, $entity)
     {
         $this->entity = $entity;
         $this->entityUpper = ucfirst($this->entity);
-        $fields = $this->getEntityFields($db);
-        $repositoryFunctions = $this->getRepositoryFunctions($fields);
+        $this->fields = $this->getEntityFields($db);
+        $this->getRepositoryFunctions();
         $this->updateRoutes();
         $this->updateRepository();
         $this->updateServices();
@@ -23,8 +43,8 @@ class CrudGeneratorService extends Command
         $this->updateExceptions();
         $this->updateServices2();
         $this->updateRepository2();
-        $this->updateRepository3($repositoryFunctions[0], $repositoryFunctions[1]);
-        $this->generateIntegrationTests($repositoryFunctions[2]);
+        $this->updateRepository3();
+        $this->generateIntegrationTests();
     }
 
     private function getEntityFields($db)
@@ -36,28 +56,21 @@ class CrudGeneratorService extends Command
         return $statement->fetchAll();
     }
 
-    private function getRepositoryFunctions($fields)
+    private function getRepositoryFunctions()
     {
         // Get Dynamic Params and Fields List.
-        $list1 = $list2 = $list3 = $list4 = $list5 = $list6 = '';
-        foreach ($fields as $field) {
-            $fieldsList = $this->getFieldsList($field);
-            $list1.= $fieldsList[0];
-            $list2.= $fieldsList[1];
-            $list3.= $fieldsList[2];
-            $list4.= $fieldsList[3];
-            $list5.= $fieldsList[4];
-            $list6.= $fieldsList[5];
+        foreach ($this->fields as $field) {
+            $this->getFieldsList($field);
         }
-        $fields1 = substr_replace($list1, '', -2);
-        $fields2 = substr_replace($list2, '', -2);
-        $fields3 = substr_replace($list3, '', -2);
-        $fields4 = substr_replace($list4, '', -2);
-        $fields5 = substr_replace($list5, '', -9);
-        $fields6 = substr_replace($list6, '', -3);
+        $fields1 = substr_replace($this->list1, '', -2);
+        $fields2 = substr_replace($this->list2, '', -2);
+        $fields3 = substr_replace($this->list3, '', -2);
+        $fields4 = substr_replace($this->list4, '', -2);
+        $fields5 = substr_replace($this->list5, '', -9);
+        $this->postParams = substr_replace($this->list6, '', -3);
 
         // Get Base Query For Insert Function.
-        $insertQueryFunction = '$query = \'INSERT INTO `'.$this->entity.'` ('.$fields1.') VALUES ('.$fields2.')\';
+        $this->insertQueryFunction = '$query = \'INSERT INTO `'.$this->entity.'` ('.$fields1.') VALUES ('.$fields2.')\';
         $statement = $this->getDb()->prepare($query);
         '.$fields3.'
         $statement->execute();
@@ -65,7 +78,7 @@ class CrudGeneratorService extends Command
         return $this->checkAndGet'.$this->entityUpper.'((int) $this->getDb()->lastInsertId());';
 
         // Get Base Query For Update Function.
-        $updateQueryFunction = ''.$fields5.'
+        $this->updateQueryFunction = ''.$fields5.'
 
         $query = \'UPDATE `'.$this->entity.'` SET '.$fields4.' WHERE `id` = :id\';
         $statement = $this->getDb()->prepare($query);
@@ -73,31 +86,27 @@ class CrudGeneratorService extends Command
         $statement->execute();
 
         return $this->checkAndGet'.$this->entityUpper.'((int) $'.$this->entity.'->id);';
-
-        return [$insertQueryFunction, $updateQueryFunction, $fields6];
     }
 
     private function getFieldsList($field)
     {
-        $list1 = sprintf("`%s`, ", $field['Field']);
-        $list2 = sprintf(":%s, ", $field['Field']);
-        $list3 = sprintf('$statement->bindParam(\'%s\', $%s->%s);%s', $field['Field'], $this->entity, $field['Field'], PHP_EOL);
-        $list3.= sprintf("%'\t1s", '');
+        $this->list1.= sprintf("`%s`, ", $field['Field']);
+        $this->list2.= sprintf(":%s, ", $field['Field']);
+        $this->list3.= sprintf('$statement->bindParam(\'%s\', $%s->%s);%s', $field['Field'], $this->entity, $field['Field'], PHP_EOL);
+        $this->list3.= sprintf("%'\t1s", '');
         if ($field['Field'] != 'id') {
-            $list4 = sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
-            $list5 = sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $this->entity, $field['Field'], $field['Field'], PHP_EOL);
-            $list5.= sprintf("        %s", '');
+            $this->list4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
+            $this->list5.= sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $this->entity, $field['Field'], $field['Field'], PHP_EOL);
+            $this->list5.= sprintf("        %s", '');
             if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
-                $list6 = sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
-                $list6.= sprintf("%'\t2s", '');
+                $this->list6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
+                $this->list6.= sprintf("%'\t2s", '');
             }
             if ($field['Null'] == "NO" && strpos($field['Type'], 'int') !== false) {
-                $list6 = sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-                $list6.= sprintf("%'\t2s", '');
+                $this->list6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
+                $this->list6.= sprintf("%'\t2s", '');
             }
         }
-
-        return [$list1, $list2, $list3, $list4, $list5, $list6];
     }
 
     private function updateRoutes()
@@ -199,20 +208,20 @@ $container["'.$this->entity.'_service"] = function (ContainerInterface $containe
         shell_exec("rm -f $target.bkp");
     }
 
-    private function updateRepository3($insertQueryFunction, $updateQueryFunction)
+    private function updateRepository3()
     {
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
 
         $entityRepository = file_get_contents($target);
-        $repositoryData = preg_replace("/".'#createFunction'."/", $insertQueryFunction, $entityRepository);
+        $repositoryData = preg_replace("/".'#createFunction'."/", $this->insertQueryFunction, $entityRepository);
         file_put_contents($target, $repositoryData);
 
         $entityRepositoryUpdate = file_get_contents($target);
-        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $updateQueryFunction, $entityRepositoryUpdate);
+        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $this->updateQueryFunction, $entityRepositoryUpdate);
         file_put_contents($target, $repositoryDataUpdate);
     }
 
-    private function generateIntegrationTests($postParams)
+    private function generateIntegrationTests()
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseTest.php';
         $target = __DIR__ . '/../../../../../tests/integration/' . $this->entityUpper . 'Test.php';
@@ -220,7 +229,7 @@ $container["'.$this->entity.'_service"] = function (ContainerInterface $containe
         $entityTests = file_get_contents($target);
         $testsData1 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $entityTests);
         $testsData2 = preg_replace("/".'objectbase'."/", $this->entity, $testsData1);
-        $testsData3 = preg_replace("/".'#postParams'."/", $postParams, $testsData2);
+        $testsData3 = preg_replace("/".'#postParams'."/", $this->postParams, $testsData2);
         file_put_contents($target, $testsData3);
     }
 }
