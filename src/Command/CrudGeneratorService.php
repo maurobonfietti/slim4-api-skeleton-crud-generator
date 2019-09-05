@@ -12,23 +12,13 @@ class CrudGeneratorService extends Command
 
     private $fields;
 
-    private $list1;
-
-    private $list2;
-
-    private $list3;
-
-    private $list4;
-
-    private $list5;
-
-    private $list6;
-
     private $insertQueryFunction;
 
     private $updateQueryFunction;
 
     private $postParams;
+
+    private $list1, $list2, $list3, $list4, $list5, $list6;
 
     public function generateCrud($db, $entity)
     {
@@ -68,24 +58,8 @@ class CrudGeneratorService extends Command
         $fields4 = substr_replace($this->list4, '', -2);
         $fields5 = substr_replace($this->list5, '', -9);
         $this->postParams = substr_replace($this->list6, '', -3);
-
-        // Get Base Query For Insert Function.
-        $this->insertQueryFunction = '$query = \'INSERT INTO `'.$this->entity.'` ('.$fields1.') VALUES ('.$fields2.')\';
-        $statement = $this->getDb()->prepare($query);
-        '.$fields3.'
-        $statement->execute();
-
-        return $this->checkAndGet'.$this->entityUpper.'((int) $this->getDb()->lastInsertId());';
-
-        // Get Base Query For Update Function.
-        $this->updateQueryFunction = ''.$fields5.'
-
-        $query = \'UPDATE `'.$this->entity.'` SET '.$fields4.' WHERE `id` = :id\';
-        $statement = $this->getDb()->prepare($query);
-        '.$fields3.'
-        $statement->execute();
-
-        return $this->checkAndGet'.$this->entityUpper.'((int) $'.$this->entity.'->id);';
+        $this->getBaseInsertQueryFunction($fields1, $fields2, $fields3);
+        $this->getBaseUpdateQueryFunction($fields3, $fields4, $fields5);
     }
 
     private function getFieldsList($field)
@@ -107,6 +81,32 @@ class CrudGeneratorService extends Command
                 $this->list6.= sprintf("%'\t2s", '');
             }
         }
+    }
+
+    private function getBaseInsertQueryFunction($fields1, $fields2, $fields3)
+    {
+        // Get Base Query For Insert Function.
+        $this->insertQueryFunction = '$query = \'INSERT INTO `'.$this->entity.'` ('.$fields1.') VALUES ('.$fields2.')\';
+        $statement = $this->getDb()->prepare($query);
+        '.$fields3.'
+        $statement->execute();
+
+        return $this->checkAndGet'.$this->entityUpper.'((int) $this->getDb()->lastInsertId());';
+        // End Mock Code...
+    }
+
+    private function getBaseUpdateQueryFunction($fields3, $fields4, $fields5)
+    {
+        // Get Base Query For Update Function.
+        $this->updateQueryFunction = ''.$fields5.'
+
+        $query = \'UPDATE `'.$this->entity.'` SET '.$fields4.' WHERE `id` = :id\';
+        $statement = $this->getDb()->prepare($query);
+        '.$fields3.'
+        $statement->execute();
+
+        return $this->checkAndGet'.$this->entityUpper.'((int) $'.$this->entity.'->id);';
+        // End Mock Code...
     }
 
     private function updateRoutes()
