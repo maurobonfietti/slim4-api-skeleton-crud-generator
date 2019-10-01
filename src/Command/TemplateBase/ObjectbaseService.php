@@ -44,10 +44,9 @@ class ObjectbaseService extends BaseService
         return $this->objectbaseRepository->updateObjectbase($objectbase, $data);
     }
 
-    public function deleteObjectbase(int $objectbaseId): string
+    public function deleteObjectbase(int $objectbaseId)
     {
         $this->checkAndGetObjectbase($objectbaseId);
-
-        return $this->objectbaseRepository->deleteObjectbase($objectbaseId);
+        $this->objectbaseRepository->deleteObjectbase($objectbaseId);
     }
 }

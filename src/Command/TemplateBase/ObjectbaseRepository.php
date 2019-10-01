@@ -44,13 +44,11 @@ class ObjectbaseRepository extends BaseRepository
         #updateFunction
     }
 
-    public function deleteObjectbase(int $objectbaseId): string
+    public function deleteObjectbase(int $objectbaseId)
     {
         $query = 'DELETE FROM `objectbase` WHERE `id` = :id';
         $statement = $this->getDb()->prepare($query);
         $statement->bindParam('id', $objectbaseId);
         $statement->execute();
-
-        return 'The objectbase was deleted.';
     }
 }

@@ -9,8 +9,8 @@ class Delete extends Base
 {
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $objectbase = $this->getObjectbaseService()->deleteObjectbase((int) $args['id']);
+        $this->getObjectbaseService()->deleteObjectbase((int) $args['id']);
 
-        return $response->withJson($objectbase, 204);
+        return $response->withJson(null, 204);
     }
 }
