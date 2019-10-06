@@ -2,20 +2,20 @@
 
 namespace Tests\integration;
 
-class ObjectbaseTest extends BaseTestCase
+class ObjectbaseTest extends TestCase
 {
     private static $id;
 
     public function testCreateObjectbase()
     {
-        $response = $this->runApp(
-            'POST',
-            '/objectbase',
-            [
+        $params = [
                 '' => '',
                 #postParams
-            ]
-        );
+        ];
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('POST', '/objectbase');
+        $request = $request->withParsedBody($params);
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -28,7 +28,9 @@ class ObjectbaseTest extends BaseTestCase
 
     public function testGetObjectbases()
     {
-        $response = $this->runApp('GET', '/objectbase');
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('GET', '/objectbase');
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -39,7 +41,9 @@ class ObjectbaseTest extends BaseTestCase
 
     public function testGetObjectbase()
     {
-        $response = $this->runApp('GET', '/objectbase/' . self::$id);
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('GET', '/objectbase/' . self::$id);
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -50,7 +54,9 @@ class ObjectbaseTest extends BaseTestCase
 
     public function testGetObjectbaseNotFound()
     {
-        $response = $this->runApp('GET', '/objectbase/123456789');
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('GET', '/objectbase/123456789');
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -60,7 +66,10 @@ class ObjectbaseTest extends BaseTestCase
 
     public function testUpdateObjectbase()
     {
-        $response = $this->runApp('PUT', '/objectbase/' . self::$id, ['' => '']);
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('PUT', '/objectbase/' . self::$id);
+        $request = $request->withParsedBody(['' => '']);
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -71,7 +80,9 @@ class ObjectbaseTest extends BaseTestCase
 
     public function testDeleteObjectbase()
     {
-        $response = $this->runApp('DELETE', '/objectbase/' . self::$id);
+        $app = $this->getAppInstance();
+        $request = $this->createRequest('DELETE', '/objectbase/' . self::$id);
+        $response = $app->handle($request);
 
         $result = (string) $response->getBody();
 
