@@ -3,7 +3,6 @@
 namespace App\Controller\Objectbase;
 
 use App\Service\ObjectbaseService;
-use Slim\Container;
 
 abstract class Base
 {
@@ -11,7 +10,7 @@ abstract class Base
 
     protected $objectbaseService;
 
-    public function __construct(Container $container)
+    public function __construct($container)
     {
         $this->container = $container;
     }

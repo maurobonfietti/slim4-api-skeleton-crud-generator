@@ -2,15 +2,14 @@
 
 namespace App\Controller\Objectbase;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 class GetOne extends Base
 {
-    public function __invoke(Request $request, Response $response, array $args): Response
+    public function __invoke($request, $response, array $args)
     {
         $objectbase = $this->getObjectbaseService()->getObjectbase((int) $args['id']);
 
-        return $response->withJson($objectbase, 200);
+        $payload = json_encode($objectbase);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }

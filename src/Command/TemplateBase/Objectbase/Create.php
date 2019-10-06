@@ -2,16 +2,15 @@
 
 namespace App\Controller\Objectbase;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 class Create extends Base
 {
-    public function __invoke(Request $request, Response $response): Response
+    public function __invoke($request, $response)
     {
         $input = $request->getParsedBody();
         $objectbase = $this->getObjectbaseService()->createObjectbase($input);
 
-        return $response->withJson($objectbase, 201);
+        $payload = json_encode($objectbase);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(201);
     }
 }

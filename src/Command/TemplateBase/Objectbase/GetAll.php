@@ -2,15 +2,14 @@
 
 namespace App\Controller\Objectbase;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
-
 class GetAll extends Base
 {
-    public function __invoke(Request $request, Response $response): Response
+    public function __invoke($request, $response)
     {
         $objectbases = $this->getObjectbaseService()->getAllObjectbase();
 
-        return $response->withJson($objectbases, 200);
+        $payload = json_encode($objectbases);
+        $response->getBody()->write($payload);
+        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
 }
