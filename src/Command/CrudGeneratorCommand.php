@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.1.0';
+    const COMMAND_VERSION = '0.2.0';
 
     public function __construct($app)
     {
@@ -37,6 +37,6 @@ class CrudGeneratorCommand extends Command
         $output->writeln('Generate Endpoints For New Entity: ' . $entity);
         $generator = new CrudGeneratorService();
         $generator->generateCrud($db, $entity);
-        $output->writeln('Script Finish ;-)');
+        $output->writeln('Finish ;-)');
     }
 }
