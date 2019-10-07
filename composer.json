@@ -1,6 +1,6 @@
 {
-    "name": "maurobonfietti/skel-api-slim-php-crud-generator",
-    "description": "CRUD Generator for Rest-Api-Slim-PHP Skeleton.",
+    "name": "maurobonfietti/slim4-api-skeleton-crud-generator",
+    "description": "CRUD Generator for Slim 4 - Api Skeleton.",
     "authors": [
         {
             "name": "Mauro Bonfietti",
