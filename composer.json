@@ -1,6 +1,7 @@
 {
     "name": "maurobonfietti/slim4-api-skeleton-crud-generator",
     "description": "CRUD Generator for Slim 4 - Api Skeleton.",
+    "license": "MIT",
     "authors": [
         {
             "name": "Mauro Bonfietti",
