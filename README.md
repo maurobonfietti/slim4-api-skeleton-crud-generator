@@ -4,9 +4,9 @@ This package provide a command to generate RESTful endpoints, to manage any simp
 
 Given an resource, like a table in MySQL, autogenerate a simple CRUD endpoints.
 
-For example, if you have an "user" table, the script generate 5 (five) new endpoints on the routes "/user".
+For example, if you have a table with the name 'user', the script generate the new endpoints on routes `/user`.
 
-Following the previous example, the command generate new endpoints like:
+Following the previous example, the command generate 5 (five) new endpoints like:
 
 - Get All Users: `GET /user`
 - Get One User: `GET /user/{id}`
@@ -15,15 +15,15 @@ Following the previous example, the command generate new endpoints like:
 - Delete User: `DELETE /user/{id}`
 
 So, the script generate a real example with all files and directories: Controller, Services, Repository, etc, etc, that allow to manage the new resource using a RESTful API.
-Also, the script make a file with PHPUnit tests, for each new endpoint generated.
+Furthermore, the script make a file with PHPUnit tests, for each new endpoint generated.
 
 
 ## HOW TO USE:
 
 ```bash
-$ ./console api:generate:endpoints {table-name}
+$ ./console api:generate:endpoints [table-name]
 Starting!
-Generate Endpoints For New Entity: user
+Generate Endpoints For New Entity: [table-name]
 Finish ;-)
 ```
 
