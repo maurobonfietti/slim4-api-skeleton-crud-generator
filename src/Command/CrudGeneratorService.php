@@ -155,58 +155,47 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         // Copy CRUD Template.
         $source = __DIR__ . '/../Command/TemplateBase/Objectbase';
         $target = __DIR__ . '/../../../../../src/Controller/' . $this->entityUpper;
-        shell_exec("cp -r $source $target");
+        $this->rcopy($source, $target);
 
         // Replace CRUD Controller Template for New Entity.
-        $base = $target . '/Base.php';
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $base");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $base");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Create.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Create.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Delete.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Delete.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/GetAll.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/GetAll.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/GetOne.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/GetOne.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Update.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Update.php");
+        $this->replaceFileContent($target . '/Base.php');
+        $this->replaceFileContent($target . '/Create.php');
+        $this->replaceFileContent($target . '/Delete.php');
+        $this->replaceFileContent($target . '/GetAll.php');
+        $this->replaceFileContent($target . '/GetOne.php');
+        $this->replaceFileContent($target . '/Update.php');
+    }
 
-        // Remove Any Temp Files.
-        shell_exec("rm -f $target/*.bkp");
+    private function replaceFileContent($target)
+    {
+        $content1 = file_get_contents($target);
+        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content1);
+        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
+        file_put_contents($target, $content3);
     }
 
     private function updateExceptions()
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
         $target = __DIR__ . '/../../../../../src/Exception/' . $this->entityUpper . 'Exception.php';
-        shell_exec("cp $source $target");
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        copy($source, $target);
+        $this->replaceFileContent($target);
     }
 
     private function updateServices2()
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseService.php';
         $target = __DIR__ . '/../../../../../src/Service/' . $this->entityUpper . 'Service.php';
-        shell_exec("cp $source $target");
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        copy($source, $target);
+        $this->replaceFileContent($target);
     }
 
     private function updateRepository2()
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseRepository.php';
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
-        shell_exec("cp $source $target");
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        copy($source, $target);
+        $this->replaceFileContent($target);
     }
 
     private function updateRepository3()
@@ -226,11 +215,28 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseTest.php';
         $target = __DIR__ . '/../../../../../tests/integration/' . $this->entityUpper . 'Test.php';
-        shell_exec("cp $source $target");
+        copy($source, $target);
         $entityTests = file_get_contents($target);
         $testsData1 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $entityTests);
         $testsData2 = preg_replace("/".'objectbase'."/", $this->entity, $testsData1);
         $testsData3 = preg_replace("/".'#postParams'."/", $this->postParams, $testsData2);
         file_put_contents($target, $testsData3);
+    }
+
+    private function rcopy($source, $dest)
+    {
+        $dir = opendir($source);
+        @mkdir($dest);
+        while (($file = readdir($dir)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            if (is_dir($source . '/' . $file)) {
+                recurse_copy($source . '/' . $file, $dest . '/' . $file);
+            } else {
+                copy($source . '/' . $file, $dest . '/' . $file);
+            }
+        }
+        closedir($dir);
     }
 }
