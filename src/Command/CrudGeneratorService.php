@@ -155,7 +155,7 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         // Copy CRUD Template.
         $source = __DIR__ . '/../Command/TemplateBase/Objectbase';
         $target = __DIR__ . '/../../../../../src/Controller/' . $this->entityUpper;
-        shell_exec("cp -r $source $target");
+        $this->rcopy($source, $target);
 
         // Replace CRUD Controller Template for New Entity.
         $base = $target . '/Base.php';
@@ -232,5 +232,22 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         $testsData2 = preg_replace("/".'objectbase'."/", $this->entity, $testsData1);
         $testsData3 = preg_replace("/".'#postParams'."/", $this->postParams, $testsData2);
         file_put_contents($target, $testsData3);
+    }
+
+    private function rcopy($source, $dest)
+    {
+        $dir = opendir($source);
+        @mkdir($dest);
+        while (($file = readdir($dir)) !== false) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+            if (is_dir($source . '/' . $file)) {
+                recurse_copy($source . '/' . $file, $dest . '/' . $file);
+            } else {
+                copy($source . '/' . $file, $dest . '/' . $file);
+            }
+        }
+        closedir($dir);
     }
 }
