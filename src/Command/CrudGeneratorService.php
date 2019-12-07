@@ -179,10 +179,7 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
         $target = __DIR__ . '/../../../../../src/Exception/' . $this->entityUpper . 'Exception.php';
         copy($source, $target);
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        $this->replaceFileContent($target);
     }
 
     private function updateServices2()
@@ -190,10 +187,7 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseService.php';
         $target = __DIR__ . '/../../../../../src/Service/' . $this->entityUpper . 'Service.php';
         copy($source, $target);
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        $this->replaceFileContent($target);
     }
 
     private function updateRepository2()
@@ -201,10 +195,7 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseRepository.php';
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
         copy($source, $target);
-        $content = file_get_contents($target);
-        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content);
-        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
-        file_put_contents($target, $content3);
+        $this->replaceFileContent($target);
     }
 
     private function updateRepository3()
