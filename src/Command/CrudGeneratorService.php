@@ -158,22 +158,20 @@ $container["'.$this->entity.'_service"] = function ($container): App\Service\\'.
         $this->rcopy($source, $target);
 
         // Replace CRUD Controller Template for New Entity.
-        $base = $target . '/Base.php';
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $base");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $base");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Create.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Create.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Delete.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Delete.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/GetAll.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/GetAll.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/GetOne.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/GetOne.php");
-        shell_exec("sed -i .bkp -e 's/Objectbase/$this->entityUpper/g' $target/Update.php");
-        shell_exec("sed -i .bkp -e 's/objectbase/$this->entity/g' $target/Update.php");
+        $this->replaceFileContent($target . '/Base.php');
+        $this->replaceFileContent($target . '/Create.php');
+        $this->replaceFileContent($target . '/Delete.php');
+        $this->replaceFileContent($target . '/GetAll.php');
+        $this->replaceFileContent($target . '/GetOne.php');
+        $this->replaceFileContent($target . '/Update.php');
+    }
 
-        // Remove Any Temp Files.
-        shell_exec("rm -f $target/*.bkp");
+    private function replaceFileContent($target)
+    {
+        $content1 = file_get_contents($target);
+        $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content1);
+        $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
+        file_put_contents($target, $content3);
     }
 
     private function updateExceptions()
