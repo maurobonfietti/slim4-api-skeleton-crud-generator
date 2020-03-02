@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -9,7 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.5.0';
+    const COMMAND_VERSION = '0.6.0';
 
     public function __construct($app)
     {
@@ -31,12 +33,10 @@ class CrudGeneratorCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Starting!');
         $db = $this->container->get('db');
         $entity = $input->getArgument('entity');
-        $output->writeln('Generate Endpoints For New Entity: ' . $entity);
+        $output->writeln('OK - Generated endpoints for entity: ' . $entity);
         $generator = new CrudGeneratorService();
         $generator->generateCrud($db, $entity);
-        $output->writeln('Finish ;-)');
     }
 }
