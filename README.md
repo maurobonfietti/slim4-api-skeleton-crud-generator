@@ -14,7 +14,8 @@ Following the previous example, the command generate 5 (five) new endpoints like
 - Update User: `PUT /user/{id}`
 - Delete User: `DELETE /user/{id}`
 
-So, the script generate a real example with all files and directories: Controller, Services, Repository, etc, etc, that allow to manage the new resource using a RESTful API.
+So, the script generate a real example with all files and directories: Controller, Services, Repository, etc, etc, that allow you to manage the new resource using as RESTful API.
+
 Furthermore, the script make a file with PHPUnit tests, for each new endpoint generated.
 
 
