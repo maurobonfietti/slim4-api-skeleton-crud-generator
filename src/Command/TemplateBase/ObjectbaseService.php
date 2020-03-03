@@ -16,39 +16,39 @@ class ObjectbaseService extends BaseService
         $this->objectbaseRepository = $objectbaseRepository;
     }
 
-    protected function checkAndGetObjectbase(int $objectbaseId)
+    protected function checkAndGet(int $objectbaseId)
     {
-        return $this->objectbaseRepository->checkAndGetObjectbase($objectbaseId);
+        return $this->objectbaseRepository->checkAndGet($objectbaseId);
     }
 
-    public function getAllObjectbase(): array
+    public function getAll(): array
     {
-        return $this->objectbaseRepository->getAllObjectbase();
+        return $this->objectbaseRepository->getAll();
     }
 
-    public function getObjectbase(int $objectbaseId)
+    public function getOne(int $objectbaseId)
     {
-        return $this->checkAndGetObjectbase($objectbaseId);
+        return $this->checkAndGet($objectbaseId);
     }
 
-    public function createObjectbase($input)
+    public function create($input)
     {
         $objectbase = json_decode(json_encode($input), false);
 
-        return $this->objectbaseRepository->createObjectbase($objectbase);
+        return $this->objectbaseRepository->create($objectbase);
     }
 
-    public function updateObjectbase(array $input, int $objectbaseId)
+    public function update(array $input, int $objectbaseId)
     {
-        $objectbase = $this->checkAndGetObjectbase($objectbaseId);
+        $objectbase = $this->checkAndGet($objectbaseId);
         $data = json_decode(json_encode($input), false);
 
-        return $this->objectbaseRepository->updateObjectbase($objectbase, $data);
+        return $this->objectbaseRepository->update($objectbase, $data);
     }
 
-    public function deleteObjectbase(int $objectbaseId)
+    public function delete(int $objectbaseId)
     {
-        $this->checkAndGetObjectbase($objectbaseId);
-        $this->objectbaseRepository->deleteObjectbase($objectbaseId);
+        $this->checkAndGet($objectbaseId);
+        $this->objectbaseRepository->delete($objectbaseId);
     }
 }

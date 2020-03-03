@@ -13,7 +13,7 @@ class ObjectbaseRepository extends BaseRepository
         $this->database = $database;
     }
 
-    public function checkAndGetObjectbase(int $objectbaseId)
+    public function checkAndGet(int $objectbaseId)
     {
         $query = 'SELECT * FROM `objectbase` WHERE `id` = :id';
         $statement = $this->getDb()->prepare($query);
@@ -27,7 +27,7 @@ class ObjectbaseRepository extends BaseRepository
         return $objectbase;
     }
 
-    public function getAllObjectbase(): array
+    public function getAll(): array
     {
         $query = 'SELECT * FROM `objectbase` ORDER BY `id`';
         $statement = $this->getDb()->prepare($query);
@@ -36,17 +36,17 @@ class ObjectbaseRepository extends BaseRepository
         return $statement->fetchAll();
     }
 
-    public function createObjectbase($objectbase)
+    public function create($objectbase)
     {
         #createFunction
     }
 
-    public function updateObjectbase($objectbase, $data)
+    public function update($objectbase, $data)
     {
         #updateFunction
     }
 
-    public function deleteObjectbase(int $objectbaseId)
+    public function delete(int $objectbaseId)
     {
         $query = 'DELETE FROM `objectbase` WHERE `id` = :id';
         $statement = $this->getDb()->prepare($query);

@@ -8,7 +8,7 @@ class GetAll extends Base
 {
     public function __invoke($request, $response)
     {
-        $objectbases = $this->getObjectbaseService()->getAllObjectbase();
+        $objectbases = $this->getObjectbaseService()->getAll();
 
         $payload = json_encode($objectbases);
         $response->getBody()->write($payload);

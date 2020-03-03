@@ -8,7 +8,7 @@ class GetOne extends Base
 {
     public function __invoke($request, $response, array $args)
     {
-        $objectbase = $this->getObjectbaseService()->getObjectbase((int) $args['id']);
+        $objectbase = $this->getObjectbaseService()->getOne((int) $args['id']);
 
         $payload = json_encode($objectbase);
         $response->getBody()->write($payload);
