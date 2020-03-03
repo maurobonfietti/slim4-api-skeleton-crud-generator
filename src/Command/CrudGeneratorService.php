@@ -59,7 +59,7 @@ class CrudGeneratorService extends Command
         $fields3 = substr_replace($this->list3, '', -2);
         $fields4 = substr_replace($this->list4, '', -2);
         $fields5 = substr_replace($this->list5, '', -9);
-        $this->postParams = substr_replace($this->list6, '', -3);
+        $this->postParams = substr_replace($this->list6, '', -14);
         $this->getBaseInsertQueryFunction($fields1, $fields2, $fields3);
         $this->getBaseUpdateQueryFunction($fields3, $fields4, $fields5);
     }
@@ -76,11 +76,11 @@ class CrudGeneratorService extends Command
             $this->list5.= sprintf("        %s", '');
             if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
                 $this->list6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
-                $this->list6.= sprintf("%'\t2s", '');
+                $this->list6.= sprintf("            %s", '');
             }
             if ($field['Null'] == "NO" && strpos($field['Type'], 'int') !== false) {
                 $this->list6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-                $this->list6.= sprintf("%'\t2s", '');
+                $this->list6.= sprintf("            %s", '');
             }
         }
     }
@@ -93,7 +93,7 @@ class CrudGeneratorService extends Command
         '.$fields3.'
         $statement->execute();
 
-        return $this->checkAndGet'.$this->entityUpper.'((int) $this->getDb()->lastInsertId());';
+        return $this->checkAndGet((int) $this->getDb()->lastInsertId());';
         // End Mock Code...
     }
 
@@ -107,7 +107,7 @@ class CrudGeneratorService extends Command
         '.$fields3.'
         $statement->execute();
 
-        return $this->checkAndGet'.$this->entityUpper.'((int) $'.$this->entity.'->id);';
+        return $this->checkAndGet((int) $'.$this->entity.'->id);';
         // End Mock Code...
     }
 

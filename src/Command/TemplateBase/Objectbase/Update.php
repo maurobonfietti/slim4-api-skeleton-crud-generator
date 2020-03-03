@@ -9,7 +9,7 @@ class Update extends Base
     public function __invoke($request, $response, array $args)
     {
         $input = $request->getParsedBody();
-        $objectbase = $this->getObjectbaseService()->updateObjectbase($input, (int) $args['id']);
+        $objectbase = $this->getObjectbaseService()->update($input, (int) $args['id']);
 
         $payload = json_encode($objectbase);
         $response->getBody()->write($payload);

@@ -9,7 +9,7 @@ class Create extends Base
     public function __invoke($request, $response)
     {
         $input = $request->getParsedBody();
-        $objectbase = $this->getObjectbaseService()->createObjectbase($input);
+        $objectbase = $this->getObjectbaseService()->create($input);
 
         $payload = json_encode($objectbase);
         $response->getBody()->write($payload);

@@ -23,9 +23,7 @@ Furthermore, the script make a file with PHPUnit tests, for each new endpoint ge
 
 ```bash
 $ ./console api:generate:endpoints [table-name]
-Starting!
-Generate Endpoints For New Entity: [table-name]
-Finish ;-)
+OK - Generated endpoints for entity: [table-name]
 ```
 
 **This package is for exclusive use of this [Slim 4 - Api Skeleton](https://github.com/maurobonfietti/slim4-api-skeleton).**
