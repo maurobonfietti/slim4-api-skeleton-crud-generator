@@ -1,20 +1,20 @@
 # CRUD GENERATOR - FOR SLIM 4 - API SKELETON
 
-This package provide a command to generate RESTful endpoints, to manage any simple entity/table.
+This package provide a command to generate a CRUD to manage any simple entity/table, in a RESTful API.
 
-Given an resource, like a table in MySQL, autogenerate a simple CRUD endpoints.
+Given an resource, like a table in MySQL, auto-generate a simple CRUD endpoints.
 
 For example, if you have a table with the name 'user', the script generate the new endpoints on routes `/user`.
 
-Following the previous example, the command generate 5 (five) new endpoints like:
+Following the previous example, the command generate 5 (five) new endpoints:
 
-- Get All Users: `GET /user`
-- Get One User: `GET /user/{id}`
+- Get Users: `GET /user`
 - Create User: `POST /user`
+- Get an User: `GET /user/{id}`
 - Update User: `PUT /user/{id}`
 - Delete User: `DELETE /user/{id}`
 
-So, the script generate a real example with all files and directories: Controller, Services, Repository, etc, etc, that allow you to manage the new resource using as RESTful API.
+So, the script generate a real example with all files and directories: Controller, Services, Repository, etc, etc, that allow you to manage the new resource using it like a RESTful API.
 
 Furthermore, the script make a file with PHPUnit tests, for each new endpoint generated.
 
@@ -26,8 +26,8 @@ $ ./console api:generate:endpoints [table-name]
 OK - Generated endpoints for entity: [table-name]
 ```
 
-**This package is for exclusive use of this [Slim 4 - Api Skeleton](https://github.com/maurobonfietti/slim4-api-skeleton).**
+**This package is for exclusive use of this [Slim 4 - Api Skeleton](https://github.com/maurobonfietti/slim4-api-skeleton) project.**
 
 *Work In Progress...*
 **Work In Progress...**
-***Work In Progress :-)***
+***Work In Progress ;-)***
