@@ -6,7 +6,7 @@ namespace App\Repository;
 
 use App\Exception\ObjectbaseException;
 
-class ObjectbaseRepository extends BaseRepository
+final class ObjectbaseRepository extends BaseRepository
 {
     public function __construct(\PDO $database)
     {
@@ -36,17 +36,17 @@ class ObjectbaseRepository extends BaseRepository
         return $statement->fetchAll();
     }
 
-    public function create($objectbase)
+    public function create(object $objectbase)
     {
         #createFunction
     }
 
-    public function update($objectbase, $data)
+    public function update(object $objectbase, object $data)
     {
         #updateFunction
     }
 
-    public function delete(int $objectbaseId)
+    public function delete(int $objectbaseId): void
     {
         $query = 'DELETE FROM `objectbase` WHERE `id` = :id';
         $statement = $this->getDb()->prepare($query);

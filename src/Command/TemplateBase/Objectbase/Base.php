@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\Controller\Objectbase;
 
 use App\Service\ObjectbaseService;
+use Pimple\Psr11\Container;
 
 abstract class Base
 {
-    protected $container;
+    protected Container $container;
 
-    protected $objectbaseService;
+    protected ObjectbaseService $objectbaseService;
 
-    public function __construct($container)
+    public function __construct(Container $container)
     {
         $this->container = $container;
     }

@@ -7,9 +7,9 @@ namespace App\Service;
 use App\Exception\ObjectbaseException;
 use App\Repository\ObjectbaseRepository;
 
-class ObjectbaseService extends BaseService
+final class ObjectbaseService extends BaseService
 {
-    protected $objectbaseRepository;
+    protected ObjectbaseRepository $objectbaseRepository;
 
     public function __construct(ObjectbaseRepository $objectbaseRepository)
     {
@@ -31,7 +31,7 @@ class ObjectbaseService extends BaseService
         return $this->checkAndGet($objectbaseId);
     }
 
-    public function create($input)
+    public function create(array $input)
     {
         $objectbase = json_decode(json_encode($input), false);
 
@@ -46,7 +46,7 @@ class ObjectbaseService extends BaseService
         return $this->objectbaseRepository->update($objectbase, $data);
     }
 
-    public function delete(int $objectbaseId)
+    public function delete(int $objectbaseId): void
     {
         $this->checkAndGet($objectbaseId);
         $this->objectbaseRepository->delete($objectbaseId);
