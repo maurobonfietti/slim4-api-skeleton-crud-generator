@@ -1,8 +1,8 @@
-# CRUD GENERATOR - FOR SLIM 4 - API SKELETON
+# CRUD GENERATOR: FOR SLIM 4 - API SKELETON
 
-This package provide a command to generate a CRUD to manage any simple entity/table, in a RESTful API.
+This package provide a command to generate CRUD endpoints to manage any simple entity/table, in a RESTful API.
 
-Given an resource, like a table in MySQL, auto-generate a simple CRUD endpoints.
+Given an resource, like a table in MySQL, auto-generate simple CRUD endpoints.
 
 For example, if you have a table with the name 'user', the script generate the new endpoints on routes `/user`.
 
