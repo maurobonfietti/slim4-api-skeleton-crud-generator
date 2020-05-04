@@ -2,7 +2,7 @@
 
 This package provide a command to generate CRUD endpoints to manage any simple entity/table, in a RESTful API.
 
-Given an resource, like a table in MySQL, auto-generate simple CRUD endpoints.
+Given a resource, like a table in MySQL, auto-generate simple CRUD endpoints.
 
 For example, if you have a table with the name 'user', the script generate the new endpoints on routes `/user`.
 
@@ -10,7 +10,7 @@ Following the previous example, the command generate 5 (five) new endpoints:
 
 - Get Users: `GET /user`
 - Create User: `POST /user`
-- Get an User: `GET /user/{id}`
+- Get User: `GET /user/{id}`
 - Update User: `PUT /user/{id}`
 - Delete User: `DELETE /user/{id}`
 
