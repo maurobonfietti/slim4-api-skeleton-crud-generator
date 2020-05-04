@@ -10,7 +10,7 @@ Following the previous example, the command generate 5 (five) new endpoints:
 
 - Get Users: `GET /user`
 - Create User: `POST /user`
-- Get User: `GET /user/{id}`
+- Get an User: `GET /user/{id}`
 - Update User: `PUT /user/{id}`
 - Delete User: `DELETE /user/{id}`
 

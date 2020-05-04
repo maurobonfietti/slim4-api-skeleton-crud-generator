@@ -22,8 +22,8 @@ class CrudGeneratorCommand extends Command
     protected function configure()
     {
         $this->setName('api:generate:endpoints')
-            ->setDescription('Given an entity, auto-generate a simple CRUD endpoints.')
-            ->setHelp('This command generate a CRUD services to manage any simple entity/table, in a RESTful API. Version: ' . self::COMMAND_VERSION)
+            ->setDescription('Given an entity, auto-generate CRUD endpoints.')
+            ->setHelp('This command generate CRUD services to manage any simple entity/table, in a RESTful API. Version: ' . self::COMMAND_VERSION)
             ->addArgument(
                 'entity',
                 InputArgument::REQUIRED,
