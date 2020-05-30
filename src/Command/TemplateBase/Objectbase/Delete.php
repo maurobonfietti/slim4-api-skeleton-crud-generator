@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Objectbase;
 
+use App\Lib\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -13,6 +14,6 @@ final class Delete extends Base
     {
         $this->getObjectbaseService()->delete((int) $args['id']);
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(204);
+        return JsonResponse::withJson($response, '', 204);
     }
 }

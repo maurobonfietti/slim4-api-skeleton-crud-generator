@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Objectbase;
 
+use App\Lib\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -13,8 +14,6 @@ final class GetAll extends Base
     {
         $objectbases = $this->getObjectbaseService()->getAll();
 
-        $payload = json_encode($objectbases);
-        $response->getBody()->write($payload);
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        return JsonResponse::withJson($response, json_encode($objectbases));
     }
 }
