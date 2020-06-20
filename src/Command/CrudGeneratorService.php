@@ -180,6 +180,7 @@ $container["'.$this->entity.'_service"] = static function ($container): App\Serv
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
         $target = __DIR__ . '/../../../../../src/Exception/' . $this->entityUpper . 'Exception.php';
+        @mkdir(__DIR__ . '/../../../../../src/Exception');
         copy($source, $target);
         $this->replaceFileContent($target);
     }
@@ -188,6 +189,7 @@ $container["'.$this->entity.'_service"] = static function ($container): App\Serv
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseService.php';
         $target = __DIR__ . '/../../../../../src/Service/' . $this->entityUpper . 'Service.php';
+        @mkdir(__DIR__ . '/../../../../../src/Service');
         copy($source, $target);
         $this->replaceFileContent($target);
     }
@@ -196,6 +198,7 @@ $container["'.$this->entity.'_service"] = static function ($container): App\Serv
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseRepository.php';
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
+        @mkdir(__DIR__ . '/../../../../../src/Repository');
         copy($source, $target);
         $this->replaceFileContent($target);
     }
