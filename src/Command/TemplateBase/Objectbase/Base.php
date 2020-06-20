@@ -9,9 +9,9 @@ use Pimple\Psr11\Container;
 
 abstract class Base
 {
-    protected Container $container;
+    protected $container;
 
-    protected ObjectbaseService $objectbaseService;
+    protected $objectbaseService;
 
     public function __construct(Container $container)
     {

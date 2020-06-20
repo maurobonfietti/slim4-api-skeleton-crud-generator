@@ -7,9 +7,9 @@ namespace App\Service;
 use App\Exception\ObjectbaseException;
 use App\Repository\ObjectbaseRepository;
 
-final class ObjectbaseService extends BaseService
+final class ObjectbaseService
 {
-    protected ObjectbaseRepository $objectbaseRepository;
+    protected $objectbaseRepository;
 
     public function __construct(ObjectbaseRepository $objectbaseRepository)
     {

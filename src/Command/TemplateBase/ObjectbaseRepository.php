@@ -6,8 +6,15 @@ namespace App\Repository;
 
 use App\Exception\ObjectbaseException;
 
-final class ObjectbaseRepository extends BaseRepository
+final class ObjectbaseRepository
 {
+    protected $database;
+
+    protected function getDb(): \PDO
+    {
+        return $this->database;
+    }
+
     public function __construct(\PDO $database)
     {
         $this->database = $database;
