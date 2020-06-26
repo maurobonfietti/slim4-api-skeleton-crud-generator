@@ -115,10 +115,10 @@ class CrudGeneratorService extends Command
     {
         $routes = '
 $app->get("/'.$this->entity.'", "App\Controller\\'.$this->entityUpper.'\GetAll");
-$app->get("/'.$this->entity.'/[{id}]", "App\Controller\\'.$this->entityUpper.'\GetOne");
 $app->post("/'.$this->entity.'", "App\Controller\\'.$this->entityUpper.'\Create");
-$app->put("/'.$this->entity.'/[{id}]", "App\Controller\\'.$this->entityUpper.'\Update");
-$app->delete("/'.$this->entity.'/[{id}]", "App\Controller\\'.$this->entityUpper.'\Delete");
+$app->get("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\GetOne");
+$app->put("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\Update");
+$app->delete("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\Delete");
 ';
         $file = __DIR__ . '/../../../../../src/App/Routes.php';
         $content = file_get_contents($file);
