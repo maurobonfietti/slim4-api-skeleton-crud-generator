@@ -14,10 +14,9 @@ class ObjectbaseTest extends TestCase
             '' => '',
             #postParams
         ];
-        $app = $this->getAppInstance();
         $req = $this->createRequest('POST', '/objectbase');
         $request = $req->withParsedBody($params);
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -30,9 +29,8 @@ class ObjectbaseTest extends TestCase
 
     public function testGetAll()
     {
-        $app = $this->getAppInstance();
         $request = $this->createRequest('GET', '/objectbase');
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -43,9 +41,8 @@ class ObjectbaseTest extends TestCase
 
     public function testGetOne()
     {
-        $app = $this->getAppInstance();
         $request = $this->createRequest('GET', '/objectbase/' . self::$id);
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -56,9 +53,8 @@ class ObjectbaseTest extends TestCase
 
     public function testGetOneNotFound()
     {
-        $app = $this->getAppInstance();
         $request = $this->createRequest('GET', '/objectbase/123456789');
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -68,10 +64,9 @@ class ObjectbaseTest extends TestCase
 
     public function testUpdate()
     {
-        $app = $this->getAppInstance();
         $req = $this->createRequest('PUT', '/objectbase/' . self::$id);
         $request = $req->withParsedBody(['' => '']);
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 
@@ -82,9 +77,8 @@ class ObjectbaseTest extends TestCase
 
     public function testDelete()
     {
-        $app = $this->getAppInstance();
         $request = $this->createRequest('DELETE', '/objectbase/' . self::$id);
-        $response = $app->handle($request);
+        $response = $this->getAppInstance()->handle($request);
 
         $result = (string) $response->getBody();
 

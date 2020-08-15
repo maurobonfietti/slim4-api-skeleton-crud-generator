@@ -114,11 +114,11 @@ class CrudGeneratorService extends Command
     private function updateRoutes()
     {
         $routes = '
-$app->get("/'.$this->entity.'", "App\Controller\\'.$this->entityUpper.'\GetAll");
-$app->post("/'.$this->entity.'", "App\Controller\\'.$this->entityUpper.'\Create");
-$app->get("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\GetOne");
-$app->put("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\Update");
-$app->delete("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\Delete");
+$app->get(\'/'.$this->entity.'\', App\Controller\\'.$this->entityUpper.'\GetAll::class);
+$app->post(\'/'.$this->entity.'\', App\Controller\\'.$this->entityUpper.'\Create::class);
+$app->get(\'/'.$this->entity.'/{id}\', App\Controller\\'.$this->entityUpper.'\GetOne::class);
+$app->put(\'/'.$this->entity.'/{id}\', App\Controller\\'.$this->entityUpper.'\Update::class);
+$app->delete(\'/'.$this->entity.'/{id}\', App\Controller\\'.$this->entityUpper.'\Delete::class);
 ';
         $file = __DIR__ . '/../../../../../src/App/Routes.php';
         $content = file_get_contents($file);
@@ -129,8 +129,8 @@ $app->delete("/'.$this->entity.'/{id}", "App\Controller\\'.$this->entityUpper.'\
     private function updateRepository()
     {
         $repository = '
-$container["'.$this->entity.'_repository"] = static function ($container): App\Repository\\'.$this->entityUpper.'Repository {
-    return new App\Repository\\'.$this->entityUpper.'Repository($container["db"]);
+$container[\''.$this->entity.'_repository\'] = static function ($container): App\Repository\\'.$this->entityUpper.'Repository {
+    return new App\Repository\\'.$this->entityUpper.'Repository($container[\'db\']);
 };
 ';
         $file = __DIR__ . '/../../../../../src/App/Repositories.php';
@@ -142,8 +142,8 @@ $container["'.$this->entity.'_repository"] = static function ($container): App\R
     private function updateServices()
     {
         $service = '
-$container["'.$this->entity.'_service"] = static function ($container): App\Service\\'.$this->entityUpper.'Service {
-    return new App\Service\\'.$this->entityUpper.'Service($container["'.$this->entity.'_repository"]);
+$container[\''.$this->entity.'_service\'] = static function ($container): App\Service\\'.$this->entityUpper.'Service {
+    return new App\Service\\'.$this->entityUpper.'Service($container[\''.$this->entity.'_repository\']);
 };
 ';
         $file = __DIR__ . '/../../../../../src/App/Services.php';
