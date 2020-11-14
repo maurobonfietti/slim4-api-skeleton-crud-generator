@@ -22,12 +22,6 @@ Furthermore, the script make a file with PHPUnit tests, for each new endpoint ge
 ## HOW TO USE:
 
 ```bash
-$ ./console api:generate:endpoints [table-name]
-OK - Generated endpoints for entity: [table-name]
-```
-
-If you are using windows execute this:
-```bash
 $ php console api:generate:endpoints [table-name]
 OK - Generated endpoints for entity: [table-name]
 ```
