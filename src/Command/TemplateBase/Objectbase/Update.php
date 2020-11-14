@@ -10,8 +10,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class Update extends Base
 {
-    public function __invoke(Request $request, Response $response, array $args): Response
-    {
+    public function __invoke(
+        Request $request,
+        Response $response,
+        array $args
+    ): Response {
         $input = $request->getParsedBody();
         $objectbase = $this->getObjectbaseService()->update($input, (int) $args['id']);
 
