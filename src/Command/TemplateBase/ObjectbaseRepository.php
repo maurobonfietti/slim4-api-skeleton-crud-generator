@@ -10,14 +10,14 @@ final class ObjectbaseRepository
 {
     protected $database;
 
-    protected function getDb(): \PDO
-    {
-        return $this->database;
-    }
-
     public function __construct(\PDO $database)
     {
         $this->database = $database;
+    }
+
+    public function getDb(): \PDO
+    {
+        return $this->database;
     }
 
     public function checkAndGet(int $objectbaseId)

@@ -16,7 +16,7 @@ final class ObjectbaseService
         $this->objectbaseRepository = $objectbaseRepository;
     }
 
-    protected function checkAndGet(int $objectbaseId)
+    public function checkAndGet(int $objectbaseId)
     {
         return $this->objectbaseRepository->checkAndGet($objectbaseId);
     }
