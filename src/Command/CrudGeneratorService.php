@@ -56,7 +56,7 @@ class CrudGeneratorService extends Command
         }
         $fields1 = substr_replace($this->list1, '', -2);
         $fields2 = substr_replace($this->list2, '', -2);
-        $fields3 = substr_replace($this->list3, '', -2);
+        $fields3 = substr_replace($this->list3, '', -8);
         $fields4 = substr_replace($this->list4, '', -2);
         $fields5 = substr_replace($this->list5, '', -9);
         $this->postParams = substr_replace($this->list6, '', -14);
@@ -69,10 +69,12 @@ class CrudGeneratorService extends Command
         $this->list1.= sprintf("`%s`, ", $field['Field']);
         $this->list2.= sprintf(":%s, ", $field['Field']);
         $this->list3.= sprintf('$statement->bindParam(\'%s\', $%s->%s);%s', $field['Field'], $this->entity, $field['Field'], PHP_EOL);
-        $this->list3.= sprintf("%'\t1s", '');
+        $this->list3.= sprintf("        %s", '');
         if ($field['Field'] != 'id') {
             $this->list4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
-            $this->list5.= sprintf("if (isset(\$data->%s)) { $%s->%s = \$data->%s; }%s", $field['Field'], $this->entity, $field['Field'], $field['Field'], PHP_EOL);
+            $this->list5.= sprintf("if (isset(\$data->%s)) {%s", $field['Field'], PHP_EOL);
+            $this->list5.= sprintf("            $%s->%s = \$data->%s;%s", $this->entity, $field['Field'], $field['Field'], PHP_EOL);
+            $this->list5.= sprintf("        }%s", PHP_EOL);
             $this->list5.= sprintf("        %s", '');
             if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
                 $this->list6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
