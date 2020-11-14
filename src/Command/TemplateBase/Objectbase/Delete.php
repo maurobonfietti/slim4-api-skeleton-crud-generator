@@ -10,8 +10,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class Delete extends Base
 {
-    public function __invoke(Request $request, Response $response, array $args): Response
-    {
+    public function __invoke(
+        Request $request,
+        Response $response,
+        array $args
+    ): Response {
         $this->getObjectbaseService()->delete((int) $args['id']);
 
         return JsonResponse::withJson($response, '', 204);
