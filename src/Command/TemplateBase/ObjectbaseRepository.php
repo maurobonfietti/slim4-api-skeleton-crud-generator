@@ -8,7 +8,7 @@ use App\Exception\ObjectbaseException;
 
 final class ObjectbaseRepository
 {
-    protected $database;
+    private \PDO $database;
 
     public function __construct(\PDO $database)
     {
@@ -20,14 +20,14 @@ final class ObjectbaseRepository
         return $this->database;
     }
 
-    public function checkAndGet(int $objectbaseId)
+    public function checkAndGet(int $objectbaseId): object
     {
         $query = 'SELECT * FROM `objectbase` WHERE `id` = :id';
         $statement = $this->getDb()->prepare($query);
         $statement->bindParam('id', $objectbaseId);
         $statement->execute();
         $objectbase = $statement->fetchObject();
-        if (empty($objectbase)) {
+        if (! $objectbase) {
             throw new ObjectbaseException('Objectbase not found.', 404);
         }
 
@@ -43,12 +43,12 @@ final class ObjectbaseRepository
         return $statement->fetchAll();
     }
 
-    public function create(object $objectbase)
+    public function create(object $objectbase): object
     {
         #createFunction
     }
 
-    public function update(object $objectbase, object $data)
+    public function update(object $objectbase, object $data): object
     {
         #updateFunction
     }
