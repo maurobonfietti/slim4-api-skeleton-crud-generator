@@ -11,8 +11,6 @@ abstract class Base
 {
     protected Container $container;
 
-    protected ObjectbaseService $objectbaseService;
-
     public function __construct(Container $container)
     {
         $this->container = $container;

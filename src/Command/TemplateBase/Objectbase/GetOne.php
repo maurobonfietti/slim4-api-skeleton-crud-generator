@@ -10,6 +10,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class GetOne extends Base
 {
+    /**
+     * @param Request $request
+     * @param Response $response
+     * @param array<string> $args
+     * @return Response
+     */
     public function __invoke(
         Request $request,
         Response $response,
@@ -17,6 +23,6 @@ final class GetOne extends Base
     ): Response {
         $objectbase = $this->getObjectbaseService()->getOne((int) $args['id']);
 
-        return JsonResponse::withJson($response, json_encode($objectbase));
+        return JsonResponse::withJson($response, (string) json_encode($objectbase));
     }
 }

@@ -14,6 +14,6 @@ final class GetAll extends Base
     {
         $objectbases = $this->getObjectbaseService()->getAll();
 
-        return JsonResponse::withJson($response, json_encode($objectbases));
+        return JsonResponse::withJson($response, (string) json_encode($objectbases));
     }
 }
