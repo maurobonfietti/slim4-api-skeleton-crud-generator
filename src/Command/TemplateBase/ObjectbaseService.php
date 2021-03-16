@@ -33,7 +33,7 @@ final class ObjectbaseService
 
     public function create(array $input): object
     {
-        $objectbase = json_decode(json_encode($input), false);
+        $objectbase = json_decode((string) json_encode($input), false);
 
         return $this->objectbaseRepository->create($objectbase);
     }
@@ -41,7 +41,7 @@ final class ObjectbaseService
     public function update(array $input, int $objectbaseId): object
     {
         $objectbase = $this->checkAndGet($objectbaseId);
-        $data = json_decode(json_encode($input), false);
+        $data = json_decode((string) json_encode($input), false);
 
         return $this->objectbaseRepository->update($objectbase, $data);
     }
