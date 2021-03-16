@@ -11,10 +11,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class GetOne extends Base
 {
     /**
-     * @param Request $request
-     * @param Response $response
      * @param array<string> $args
-     * @return Response
      */
     public function __invoke(
         Request $request,
