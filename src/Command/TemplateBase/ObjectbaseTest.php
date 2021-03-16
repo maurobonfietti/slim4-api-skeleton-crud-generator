@@ -8,7 +8,7 @@ class ObjectbaseTest extends TestCase
 {
     private static $id;
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $params = [
             '' => '',
@@ -27,7 +27,7 @@ class ObjectbaseTest extends TestCase
         $this->assertStringNotContainsString('error', $result);
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $request = $this->createRequest('GET', '/objectbase');
         $response = $this->getAppInstance()->handle($request);
@@ -39,7 +39,7 @@ class ObjectbaseTest extends TestCase
         $this->assertStringNotContainsString('error', $result);
     }
 
-    public function testGetOne()
+    public function testGetOne(): void
     {
         $request = $this->createRequest('GET', '/objectbase/' . self::$id);
         $response = $this->getAppInstance()->handle($request);
@@ -51,7 +51,7 @@ class ObjectbaseTest extends TestCase
         $this->assertStringNotContainsString('error', $result);
     }
 
-    public function testGetOneNotFound()
+    public function testGetOneNotFound(): void
     {
         $request = $this->createRequest('GET', '/objectbase/123456789');
         $response = $this->getAppInstance()->handle($request);
@@ -62,7 +62,7 @@ class ObjectbaseTest extends TestCase
         $this->assertStringContainsString('error', $result);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $req = $this->createRequest('PUT', '/objectbase/' . self::$id);
         $request = $req->withParsedBody(['' => '']);
@@ -75,7 +75,7 @@ class ObjectbaseTest extends TestCase
         $this->assertStringNotContainsString('error', $result);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $request = $this->createRequest('DELETE', '/objectbase/' . self::$id);
         $response = $this->getAppInstance()->handle($request);

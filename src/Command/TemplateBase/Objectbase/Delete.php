@@ -10,6 +10,9 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 final class Delete extends Base
 {
+    /**
+     * @param array<string> $args
+     */
     public function __invoke(
         Request $request,
         Response $response,

@@ -40,7 +40,7 @@ final class ObjectbaseRepository
         $statement = $this->getDb()->prepare($query);
         $statement->execute();
 
-        return $statement->fetchAll();
+        return (array) $statement->fetchAll();
     }
 
     public function create(object $objectbase): object

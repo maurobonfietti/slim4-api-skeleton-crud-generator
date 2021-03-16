@@ -131,7 +131,7 @@ $app->delete(\'/'.$this->entity.'/{id}\', App\Controller\\'.$this->entityUpper.'
     private function updateRepository()
     {
         $repository = '
-$container[\''.$this->entity.'_repository\'] = static function ($container): App\Repository\\'.$this->entityUpper.'Repository {
+$container[\''.$this->entity.'_repository\'] = static function (Pimple\Container $container): App\Repository\\'.$this->entityUpper.'Repository {
     return new App\Repository\\'.$this->entityUpper.'Repository($container[\'db\']);
 };
 ';
@@ -144,7 +144,7 @@ $container[\''.$this->entity.'_repository\'] = static function ($container): App
     private function updateServices()
     {
         $service = '
-$container[\''.$this->entity.'_service\'] = static function ($container): App\Service\\'.$this->entityUpper.'Service {
+$container[\''.$this->entity.'_service\'] = static function (Pimple\Container $container): App\Service\\'.$this->entityUpper.'Service {
     return new App\Service\\'.$this->entityUpper.'Service($container[\''.$this->entity.'_repository\']);
 };
 ';

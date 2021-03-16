@@ -12,9 +12,9 @@ final class Create extends Base
 {
     public function __invoke(Request $request, Response $response): Response
     {
-        $input = $request->getParsedBody();
+        $input = (array) $request->getParsedBody();
         $objectbase = $this->getObjectbaseService()->create($input);
 
-        return JsonResponse::withJson($response, json_encode($objectbase), 201);
+        return JsonResponse::withJson($response, (string) json_encode($objectbase), 201);
     }
 }
