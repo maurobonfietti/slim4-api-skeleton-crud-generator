@@ -9,14 +9,14 @@ use App\Repository\ObjectbaseRepository;
 
 final class ObjectbaseService
 {
-    protected $objectbaseRepository;
+    private ObjectbaseRepository $objectbaseRepository;
 
     public function __construct(ObjectbaseRepository $objectbaseRepository)
     {
         $this->objectbaseRepository = $objectbaseRepository;
     }
 
-    public function checkAndGet(int $objectbaseId)
+    public function checkAndGet(int $objectbaseId): object
     {
         return $this->objectbaseRepository->checkAndGet($objectbaseId);
     }
@@ -26,19 +26,19 @@ final class ObjectbaseService
         return $this->objectbaseRepository->getAll();
     }
 
-    public function getOne(int $objectbaseId)
+    public function getOne(int $objectbaseId): object
     {
         return $this->checkAndGet($objectbaseId);
     }
 
-    public function create(array $input)
+    public function create(array $input): object
     {
         $objectbase = json_decode(json_encode($input), false);
 
         return $this->objectbaseRepository->create($objectbase);
     }
 
-    public function update(array $input, int $objectbaseId)
+    public function update(array $input, int $objectbaseId): object
     {
         $objectbase = $this->checkAndGet($objectbaseId);
         $data = json_decode(json_encode($input), false);
