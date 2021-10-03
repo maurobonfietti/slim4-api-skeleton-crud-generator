@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\integration;
 
+use Fig\Http\Message\StatusCodeInterface;
+
 class ObjectbaseTest extends TestCase
 {
     private static $id;
@@ -22,7 +24,7 @@ class ObjectbaseTest extends TestCase
 
         self::$id = json_decode($result)->id;
 
-        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_CREATED, $response->getStatusCode());
         $this->assertStringContainsString('id', $result);
         $this->assertStringNotContainsString('error', $result);
     }
@@ -34,7 +36,7 @@ class ObjectbaseTest extends TestCase
 
         $result = (string) $response->getBody();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
         $this->assertStringContainsString('id', $result);
         $this->assertStringNotContainsString('error', $result);
     }
@@ -46,7 +48,7 @@ class ObjectbaseTest extends TestCase
 
         $result = (string) $response->getBody();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
         $this->assertStringContainsString('id', $result);
         $this->assertStringNotContainsString('error', $result);
     }
@@ -58,7 +60,7 @@ class ObjectbaseTest extends TestCase
 
         $result = (string) $response->getBody();
 
-        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_NOT_FOUND, $response->getStatusCode());
         $this->assertStringContainsString('error', $result);
     }
 
@@ -70,7 +72,7 @@ class ObjectbaseTest extends TestCase
 
         $result = (string) $response->getBody();
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_OK, $response->getStatusCode());
         $this->assertStringContainsString('id', $result);
         $this->assertStringNotContainsString('error', $result);
     }
@@ -82,7 +84,7 @@ class ObjectbaseTest extends TestCase
 
         $result = (string) $response->getBody();
 
-        $this->assertEquals(204, $response->getStatusCode());
+        $this->assertEquals(StatusCodeInterface::STATUS_NO_CONTENT, $response->getStatusCode());
         $this->assertStringNotContainsString('error', $result);
     }
 }
