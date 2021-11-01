@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Objectbase;
 
-use App\Helper\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Fig\Http\Message\StatusCodeInterface;
 
 final class Delete extends Base
 {
@@ -20,6 +20,6 @@ final class Delete extends Base
     ): Response {
         $this->getObjectbaseService()->delete((int) $args['id']);
 
-        return JsonResponse::withJson($response, '', 204);
+        return $response->withJson('', StatusCodeInterface::STATUS_NO_CONTENT);
     }
 }

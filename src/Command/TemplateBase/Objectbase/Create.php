@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Objectbase;
 
-use App\Helper\JsonResponse;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Fig\Http\Message\StatusCodeInterface;
 
 final class Create extends Base
 {
@@ -15,6 +15,6 @@ final class Create extends Base
         $input = (array) $request->getParsedBody();
         $objectbase = $this->getObjectbaseService()->create($input);
 
-        return JsonResponse::withJson($response, (string) json_encode($objectbase), 201);
+        return $response->withJson($objectbase, StatusCodeInterface::STATUS_CREATED);
     }
 }
