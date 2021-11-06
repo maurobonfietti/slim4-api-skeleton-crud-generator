@@ -12,8 +12,8 @@ class CrudGeneratorService
     {
         $this->entity = $entity;
         $this->entityUpper = ucfirst($this->entity);
-        $eee = new CrudGeneratorEntity();
-        $eee->getParamsAndFields($db, $this->entity);
+        $entity = new CrudGeneratorEntity();
+        $entity->getParamsAndFields($db, $this->entity);
         $this->updateRoutes();
         $this->updateRepository();
         $this->updateServices();
@@ -21,29 +21,29 @@ class CrudGeneratorService
         $this->updateExceptions();
         $this->updateServices2();
         $this->updateRepository2();
-        $this->updateRepository3($eee);
-        $this->generateIntegrationTests($eee);
+        $this->updateRepository3($entity);
+        $this->generateIntegrationTests($entity);
     }
 
-    private function getBaseInsertQueryFunction($eee)
+    private function getBaseInsertQueryFunction($entity)
     {
         // Get Base Query For Insert Function and return this Mock Code...
-        return '$query = \'INSERT INTO `'.$this->entity.'` ('.$eee->list1.') VALUES ('.$eee->list2.')\';
+        return '$query = \'INSERT INTO `'.$this->entity.'` ('.$entity->list1.') VALUES ('.$entity->list2.')\';
         $statement = $this->getDb()->prepare($query);
-        '.$eee->list3.'
+        '.$entity->list3.'
         $statement->execute();
 
         return $this->checkAndGet((int) $this->getDb()->lastInsertId());';
     }
 
-    private function getBaseUpdateQueryFunction($eee)
+    private function getBaseUpdateQueryFunction($entity)
     {
         // Get Base Query For Update Function and return this Mock Code...
-        return $eee->list5.'
+        return $entity->list5.'
 
-        $query = \'UPDATE `'.$this->entity.'` SET '.$eee->list4.' WHERE `id` = :id\';
+        $query = \'UPDATE `'.$this->entity.'` SET '.$entity->list4.' WHERE `id` = :id\';
         $statement = $this->getDb()->prepare($query);
-        '.$eee->list3.'
+        '.$entity->list3.'
         $statement->execute();
 
         return $this->checkAndGet((int) $'.$this->entity.'->id);';
@@ -141,20 +141,20 @@ $container[\''.$this->entity.'_service\'] = static function (Pimple\Container $c
         $this->replaceFileContent($target);
     }
 
-    private function updateRepository3($eee)
+    private function updateRepository3($entity)
     {
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
 
         $entityRepository = file_get_contents($target);
-        $repositoryData = preg_replace("/".'#createFunction'."/", $this->getBaseInsertQueryFunction($eee), $entityRepository);
+        $repositoryData = preg_replace("/".'#createFunction'."/", $this->getBaseInsertQueryFunction($entity), $entityRepository);
         file_put_contents($target, $repositoryData);
 
         $entityRepositoryUpdate = file_get_contents($target);
-        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $this->getBaseUpdateQueryFunction($eee), $entityRepositoryUpdate);
+        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $this->getBaseUpdateQueryFunction($entity), $entityRepositoryUpdate);
         file_put_contents($target, $repositoryDataUpdate);
     }
 
-    private function generateIntegrationTests($eee)
+    private function generateIntegrationTests($entity)
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseTest.php';
         $target = __DIR__ . '/../../../../../tests/integration/' . $this->entityUpper . 'Test.php';
@@ -162,7 +162,7 @@ $container[\''.$this->entity.'_service\'] = static function (Pimple\Container $c
         $entityTests = file_get_contents($target);
         $testsData1 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $entityTests);
         $testsData2 = preg_replace("/".'objectbase'."/", $this->entity, $testsData1);
-        $testsData3 = preg_replace("/".'#postParams'."/", $eee->list6, $testsData2);
+        $testsData3 = preg_replace("/".'#postParams'."/", $entity->list6, $testsData2);
         file_put_contents($target, $testsData3);
     }
 
