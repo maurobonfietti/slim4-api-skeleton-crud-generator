@@ -2,30 +2,18 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Command\Command;
-
-class CrudGeneratorService extends Command
+class CrudGeneratorService
 {
     private $entity;
 
     private $entityUpper;
 
-    private $fields;
-
-    private $insertQueryFunction;
-
-    private $updateQueryFunction;
-
-    private $postParams;
-
-    private $list1, $list2, $list3, $list4, $list5, $list6;
-
     public function generateCrud($db, $entity)
     {
         $this->entity = $entity;
         $this->entityUpper = ucfirst($this->entity);
-        $this->fields = $this->getEntityFields($db);
-        $this->getRepositoryFunctions();
+        $entity = new CrudGeneratorEntity();
+        $entity->getParamsAndFields($db, $this->entity);
         $this->updateRoutes();
         $this->updateRepository();
         $this->updateServices();
@@ -33,82 +21,32 @@ class CrudGeneratorService extends Command
         $this->updateExceptions();
         $this->updateServices2();
         $this->updateRepository2();
-        $this->updateRepository3();
-        $this->generateIntegrationTests();
+        $this->updateRepository3($entity);
+        $this->generateIntegrationTests($entity);
     }
 
-    private function getEntityFields($db)
+    private function getBaseInsertQueryFunction($entity)
     {
-        $query = "DESC `$this->entity`";
-        $statement = $db->prepare($query);
-        $statement->execute();
-
-        return $statement->fetchAll();
-    }
-
-    private function getRepositoryFunctions()
-    {
-        // Get Dynamic Params and Fields List.
-        foreach ($this->fields as $field) {
-            $this->getFieldsList($field);
-        }
-        $fields1 = substr_replace($this->list1, '', -2);
-        $fields2 = substr_replace($this->list2, '', -2);
-        $fields3 = substr_replace($this->list3, '', -8);
-        $fields4 = substr_replace($this->list4, '', -2);
-        $fields5 = substr_replace($this->list5, '', -9);
-        $this->postParams = substr_replace($this->list6, '', -14);
-        $this->getBaseInsertQueryFunction($fields1, $fields2, $fields3);
-        $this->getBaseUpdateQueryFunction($fields3, $fields4, $fields5);
-    }
-
-    private function getFieldsList($field)
-    {
-        $this->list1.= sprintf("`%s`, ", $field['Field']);
-        $this->list2.= sprintf(":%s, ", $field['Field']);
-        $this->list3.= sprintf('$statement->bindParam(\'%s\', $%s->%s);%s', $field['Field'], $this->entity, $field['Field'], PHP_EOL);
-        $this->list3.= sprintf("        %s", '');
-        if ($field['Field'] != 'id') {
-            $this->list4.= sprintf("`%s` = :%s, ", $field['Field'], $field['Field']);
-            $this->list5.= sprintf("if (isset(\$data->%s)) {%s", $field['Field'], PHP_EOL);
-            $this->list5.= sprintf("            $%s->%s = \$data->%s;%s", $this->entity, $field['Field'], $field['Field'], PHP_EOL);
-            $this->list5.= sprintf("        }%s", PHP_EOL);
-            $this->list5.= sprintf("        %s", '');
-            if ($field['Null'] == "NO" && strpos($field['Type'], 'varchar') !== false) {
-                $this->list6.= sprintf("'%s' => '%s',%s", $field['Field'], 'aaa', PHP_EOL);
-                $this->list6.= sprintf("            %s", '');
-            }
-            if ($field['Null'] == "NO" && strpos($field['Type'], 'int') !== false) {
-                $this->list6.= sprintf("'%s' => %s,%s", $field['Field'], 1, PHP_EOL);
-                $this->list6.= sprintf("            %s", '');
-            }
-        }
-    }
-
-    private function getBaseInsertQueryFunction($fields1, $fields2, $fields3)
-    {
-        // Get Base Query For Insert Function.
-        $this->insertQueryFunction = '$query = \'INSERT INTO `'.$this->entity.'` ('.$fields1.') VALUES ('.$fields2.')\';
+        // Get Base Query For Insert Function and return this Mock Code...
+        return '$query = \'INSERT INTO `'.$this->entity.'` ('.$entity->list1.') VALUES ('.$entity->list2.')\';
         $statement = $this->getDb()->prepare($query);
-        '.$fields3.'
+        '.$entity->list3.'
         $statement->execute();
 
         return $this->checkAndGet((int) $this->getDb()->lastInsertId());';
-        // End Mock Code...
     }
 
-    private function getBaseUpdateQueryFunction($fields3, $fields4, $fields5)
+    private function getBaseUpdateQueryFunction($entity)
     {
-        // Get Base Query For Update Function.
-        $this->updateQueryFunction = ''.$fields5.'
+        // Get Base Query For Update Function and return this Mock Code...
+        return $entity->list5.'
 
-        $query = \'UPDATE `'.$this->entity.'` SET '.$fields4.' WHERE `id` = :id\';
+        $query = \'UPDATE `'.$this->entity.'` SET '.$entity->list4.' WHERE `id` = :id\';
         $statement = $this->getDb()->prepare($query);
-        '.$fields3.'
+        '.$entity->list3.'
         $statement->execute();
 
         return $this->checkAndGet((int) $'.$this->entity.'->id);';
-        // End Mock Code...
     }
 
     private function updateRoutes()
@@ -203,20 +141,20 @@ $container[\''.$this->entity.'_service\'] = static function (Pimple\Container $c
         $this->replaceFileContent($target);
     }
 
-    private function updateRepository3()
+    private function updateRepository3($entity)
     {
         $target = __DIR__ . '/../../../../../src/Repository/' . $this->entityUpper . 'Repository.php';
 
         $entityRepository = file_get_contents($target);
-        $repositoryData = preg_replace("/".'#createFunction'."/", $this->insertQueryFunction, $entityRepository);
+        $repositoryData = preg_replace("/".'#createFunction'."/", $this->getBaseInsertQueryFunction($entity), $entityRepository);
         file_put_contents($target, $repositoryData);
 
         $entityRepositoryUpdate = file_get_contents($target);
-        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $this->updateQueryFunction, $entityRepositoryUpdate);
+        $repositoryDataUpdate = preg_replace("/".'#updateFunction'."/", $this->getBaseUpdateQueryFunction($entity), $entityRepositoryUpdate);
         file_put_contents($target, $repositoryDataUpdate);
     }
 
-    private function generateIntegrationTests()
+    private function generateIntegrationTests($entity)
     {
         $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseTest.php';
         $target = __DIR__ . '/../../../../../tests/integration/' . $this->entityUpper . 'Test.php';
@@ -224,7 +162,7 @@ $container[\''.$this->entity.'_service\'] = static function (Pimple\Container $c
         $entityTests = file_get_contents($target);
         $testsData1 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $entityTests);
         $testsData2 = preg_replace("/".'objectbase'."/", $this->entity, $testsData1);
-        $testsData3 = preg_replace("/".'#postParams'."/", $this->postParams, $testsData2);
+        $testsData3 = preg_replace("/".'#postParams'."/", $entity->list6, $testsData2);
         file_put_contents($target, $testsData3);
     }
 
