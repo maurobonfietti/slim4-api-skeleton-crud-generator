@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Exception\ObjectbaseException;
 use App\Repository\ObjectbaseRepository;
 
 final class ObjectbaseService
