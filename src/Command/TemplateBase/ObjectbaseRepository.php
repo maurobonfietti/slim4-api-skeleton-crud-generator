@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Exception\ObjectbaseException;
-
 final class ObjectbaseRepository
 {
     private \PDO $database;
@@ -28,7 +26,7 @@ final class ObjectbaseRepository
         $statement->execute();
         $objectbase = $statement->fetchObject();
         if (! $objectbase) {
-            throw new ObjectbaseException('Objectbase not found.', 404);
+            throw new \Exception('Objectbase not found.', 404);
         }
 
         return $objectbase;

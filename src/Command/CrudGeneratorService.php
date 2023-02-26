@@ -18,7 +18,6 @@ class CrudGeneratorService
         $this->updateRepository();
         $this->updateServices();
         $this->generateControllerFiles();
-        $this->updateExceptions();
         $this->updateServices2();
         $this->updateRepository2();
         $this->updateRepository3($entity);
@@ -112,15 +111,6 @@ $container[\''.$this->entity.'_service\'] = static function (Pimple\Container $c
         $content2 = preg_replace("/".'Objectbase'."/", $this->entityUpper, $content1);
         $content3 = preg_replace("/".'objectbase'."/", $this->entity, $content2);
         file_put_contents($target, $content3);
-    }
-
-    private function updateExceptions()
-    {
-        $source = __DIR__ . '/../Command/TemplateBase/ObjectbaseException.php';
-        $target = __DIR__ . '/../../../../../src/Exception/' . $this->entityUpper . 'Exception.php';
-        @mkdir(__DIR__ . '/../../../../../src/Exception');
-        copy($source, $target);
-        $this->replaceFileContent($target);
     }
 
     private function updateServices2()
