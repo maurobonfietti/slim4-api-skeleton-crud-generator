@@ -57,6 +57,6 @@ class CrudGeneratorEntity
         $this->list3 = substr_replace($this->list3, '', -8);
         $this->list4 = substr_replace($this->list4, '', -2);
         $this->list5 = substr_replace($this->list5, '', -9);
-        $this->list6 = substr_replace($this->list6, '', -14);
+        $this->list6 = substr_replace($this->list6 ?? '', '', -14);
     }
 }
