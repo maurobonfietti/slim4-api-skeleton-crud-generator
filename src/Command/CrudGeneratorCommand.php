@@ -11,7 +11,9 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.21.0';
+    const COMMAND_VERSION = '0.22.0';
+
+    protected $container;
 
     public function __construct($app)
     {
