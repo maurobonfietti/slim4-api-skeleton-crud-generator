@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class CrudGeneratorCommand extends Command
 {
-    const COMMAND_VERSION = '0.22.0';
+    const COMMAND_VERSION = '0.23.0';
 
     protected $container;
 
@@ -21,7 +21,7 @@ class CrudGeneratorCommand extends Command
         $this->container = $app->getContainer();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('api:generate:endpoints')
             ->setDescription('Given an entity, auto-generate CRUD endpoints.')
@@ -33,12 +33,14 @@ class CrudGeneratorCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $db = $this->container->get('db');
         $entity = $input->getArgument('entity');
         $generator = new CrudGeneratorService();
         $generator->generateCrud($db, $entity);
         $output->writeln('OK - Generated endpoints for entity: ' . $entity);
+
+        return Command::SUCCESS;
     }
 }
